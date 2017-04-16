@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/16 19:41:14 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/04/16 20:18:55 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ Snake::Snake(void) : _len(1)
 Snake::Snake(Snake const & src)
 {
 	*this = src;
+	return ;
+}
+
+Snake::~Snake(void)
+{
 	return ;
 }
 
