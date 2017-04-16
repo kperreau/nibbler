@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:32 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/16 18:52:58 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/04/16 19:39:20 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,16 @@
 class Snake
 {
 	public:
-		Snake(std::string const & str);
+		Snake(void);
 		Snake(Snake const & src);
 		~Snake(void);
+		Snake &												operator=(Snake const & rhs);
+		uint32_t											get_len(void) const;
+		std::list <std::pair <uint32_t, uint32_t> > const &	get_elems(void) const;
 
 	private:
-		uint32_t									_len;
-		std::list <std::pair <uint32_t, uint32_t>>	_elems;
+		uint32_t										_len;
+		std::list <std::pair <uint32_t, uint32_t> >		_elems;
 };
 
 std::ostream &		operator<<(std::ostream & o, Snake const & i);
