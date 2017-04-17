@@ -14,27 +14,31 @@
 # define ENGINE_CLASS_HPP
 # include <iostream>
 # include <string>
-# include <list>
+# include <vector>
 # include <sstream>
 # include <cstdint>
 # include <utility>
+# include "Snake.class.hpp"
 
 class Engine
 {
 	public:
-		Engine(void);
 		Engine(uint32_t width, uint32_t height, uint32_t nb_players);
 		Engine(Engine const & src);
 		~Engine(void);
-		uint32_t	get_nbPlayers(void) const;
-		uint32_t	get_width(void) const;
-		uint32_t	get_height(void) const;
-		Engine &	operator=(Engine const & rhs);
+		uint32_t				get_nbPlayers(void) const;
+		uint32_t				get_width(void) const;
+		uint32_t				get_height(void) const;
+		Snake const &			get_player_by_id(uint32_t id) const;
+		std::vector <Snake> *	get_players_list(void) const;
+		void					run(void);
+		Engine &				operator=(Engine const & rhs);
 
 	private:
-		uint32_t	_nbPlayers;
-		uint32_t	_height;
-		uint32_t	_width;
+		uint32_t					_nbPlayers;
+		uint32_t					_height;
+		uint32_t					_width;
+		std::vector <Snake> *		_listPlayers;
 };
 
 std::ostream &		operator<<(std::ostream & o, Engine const & i);

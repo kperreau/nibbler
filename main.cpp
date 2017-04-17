@@ -87,6 +87,5 @@ int		main(int ac, char **av)
 	opts = options(ac, av);
 
 	Engine	engine(opts.width, opts.height, opts.players);
-	Snake	snake;
 	return (0);
 }

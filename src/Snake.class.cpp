@@ -12,12 +12,13 @@
 
 #include "Snake.class.hpp"
 
-Snake::Snake(void) : _len(1)
+Snake::Snake(void) : _len(1), _id(_nextID++)
 {
+	std::cout << "snake id: " << _id << std::endl;
 	return ;
 }
 
-Snake::Snake(Snake const & src)
+Snake::Snake(Snake const & src) : _id(_nextID++)
 {
 	*this = src;
 	return ;
@@ -45,3 +46,5 @@ Snake &			Snake::operator=(Snake const & rhs)
 	this->_elems = rhs.get_elems();
 	return (*this);
 }
+
+uint32_t Snake::_nextID = 0;

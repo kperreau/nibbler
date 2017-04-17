@@ -30,7 +30,10 @@ class Snake
 		std::list <std::pair <uint32_t, uint32_t> > const &	get_elems(void) const;
 
 	private:
-		uint32_t										_len;
+		uint32_t			_len;
+		uint32_t			_dir;
+		const uint32_t		_id;
+		static uint32_t		_nextID;
 		std::list <std::pair <uint32_t, uint32_t> >		_elems;
 };
 
