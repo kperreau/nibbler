@@ -12,7 +12,7 @@
 
 #include "Engine.class.hpp"
 
-Engine::Engine(uint32_t width, uint32_t height, uint32_t nb_players) : _rate(0)
+Engine::Engine(uint32_t width, uint32_t height, uint32_t nb_players) : _speed(700), _rate(0)
 {
 	if (nb_players < 1 && nb_players > 4)
 	{
@@ -51,19 +51,15 @@ Engine::~Engine(void)
 
 void					Engine::run(void)
 {
-	// srand(time(0));
 	auto	time = Clock::now();
 	auto	oldtime = Clock::now();
 	long	duration = 0;
-	
-	;
 
 	while (1)
 	{
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
-		// this->setRate();
-		if (duration < 700000000)
+		if (duration < this->_speed * 1000000)
 			continue ;
 		oldtime = Clock::now();
 		this->checkPlayers();
@@ -111,18 +107,6 @@ void					Engine::setRate(void)
 {
 	return ;
 }
-
-// void					Engine::setRate(void)
-// {
-	// static clock_t	oldtime = 0;
-	// static clock_t	time = 0;
-
-	// oldtime = time;
-	// time = clock();
-	// if ((time - oldtime) > 0)
-		// this->_rate = CLOCKS_PER_SEC / (time - oldtime);
-	// return ;
-// }
 
 Snake const *			Engine::get_player_by_id(uint32_t id) const
 {

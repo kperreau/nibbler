@@ -54,8 +54,8 @@ class Engine
 		uint32_t					_nbPlayersAlive;
 		uint32_t					_height;
 		uint32_t					_width;
+		uint32_t					_speed;
 		long						_rate;
-		// std::vector <Snake> *		_listPlayers;
 		std::vector <Snake *>		_listPlayers;
 };
 
