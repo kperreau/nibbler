@@ -35,7 +35,7 @@ void		put_error(std::string error)
 
 void		usage(char *name)
 {
-	std::cout << "usage: " << name << " [rsvnf] [file]" << std::endl;
+	std::cout << "usage: " << name << " [xyph]" << std::endl;
 	std::cout << "'-v' for a verbose output" << std::endl;
 	std::cout << "'-x size' to set width of window" << std::endl;
 	std::cout << "'-y size' to set height of window" << std::endl;
@@ -84,6 +84,11 @@ int		main(int ac, char **av)
 {
 	t_opts		opts;
 
+	if (ac < 2)
+	{
+		usage(av[0]);
+		return (0);
+	}
 	opts = options(ac, av);
 
 	Engine	engine(opts.width, opts.height, opts.players);
