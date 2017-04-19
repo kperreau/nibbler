@@ -19,22 +19,36 @@
 # include <cstdint>
 # include <utility>
 
+enum	input {
+	Left,
+	Right,
+	Top,
+	Bottom,
+};
+
 class Snake
 {
 	public:
-		Snake(void);
+		Snake(std::pair <int, int> const & start);
 		Snake(Snake const & src);
 		~Snake(void);
-		Snake &												operator=(Snake const & rhs);
-		uint32_t											get_len(void) const;
-		std::list <std::pair <uint32_t, uint32_t> > const &	get_elems(void) const;
+		Snake &				operator=(Snake const & rhs);
+		uint32_t			get_len(void) const;
+		void				move(void);
+		void				set_isAlive(char val);
+		char				get_isAlive(void) const;
+		input				getDir(void) const;
+		uint32_t			getID(void) const;
+		std::list <std::pair <int, int> > const &	get_elems(void) const;
 
 	private:
 		uint32_t			_len;
-		uint32_t			_dir;
+		char				_isAlive;
+		input				_dir;
 		const uint32_t		_id;
+		uint32_t			_speed;
 		static uint32_t		_nextID;
-		std::list <std::pair <uint32_t, uint32_t> >		_elems;
+		std::list <std::pair <int, int> >		_elems;
 };
 
 std::ostream &		operator<<(std::ostream & o, Snake const & i);

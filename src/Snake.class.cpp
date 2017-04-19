@@ -12,9 +12,15 @@
 
 #include "Snake.class.hpp"
 
-Snake::Snake(void) : _len(1), _id(_nextID++)
+Snake::Snake(std::pair <int, int> const & start) : _len(4), _id(_nextID++), _isAlive(1), _dir(Top)
 {
-	std::cout << "snake id: " << _id << std::endl;
+	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start)));
+	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 1));
+	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 2));
+	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 3));
+	std::cout << "snake id: " << _id << " is new" << std::endl;
+	// std::cout << "x: " << std::get<0>(start) << std::endl;
+	// std::cout << "y: " << std::get<1>(start) << std::endl;
 	return ;
 }
 
@@ -26,6 +32,7 @@ Snake::Snake(Snake const & src) : _id(_nextID++)
 
 Snake::~Snake(void)
 {
+	std::cout << "snake id: " << _id << " is dead" << std::endl;
 	return ;
 }
 
@@ -34,7 +41,65 @@ uint32_t		Snake::get_len(void) const
 	return (this->_len);
 }
 
-std::list <std::pair <uint32_t, uint32_t> > const &		Snake::get_elems(void) const
+void		Snake::set_isAlive(char val)
+{
+	this->_isAlive = val;
+	return ;
+}
+
+char		Snake::get_isAlive(void) const
+{
+	return (this->_isAlive);
+}
+
+uint32_t	Snake::getID(void) const
+{
+	return (this->_id);
+}
+
+input		Snake::getDir(void) const
+{
+	return (this->_dir);
+}
+
+void			Snake::move(void)
+{
+	std::pair <int, int> head;
+
+	std::cout << "snake id: " << _id << " is moving" << std::endl;
+	
+	switch (this->_dir)
+	{
+		case Top:
+			std::get<0>(head) = std::get<0>(this->_elems.front());
+			std::get<1>(head) = std::get<1>(this->_elems.front()) - 1;
+			break ;
+		case Left:
+			std::get<0>(head) = std::get<0>(this->_elems.front()) - 1;
+			std::get<1>(head) = std::get<1>(this->_elems.front());
+			break ;
+		case Bottom:
+			std::get<0>(head) = std::get<0>(this->_elems.front());
+			std::get<1>(head) = std::get<1>(this->_elems.front()) + 1;
+			break ;
+		case Right:
+			std::get<0>(head) = std::get<0>(this->_elems.front()) + 1;
+			std::get<1>(head) = std::get<1>(this->_elems.front());
+			break ;
+		default:
+			std::get<0>(head) = std::get<0>(this->_elems.front());
+			std::get<1>(head) = std::get<1>(this->_elems.front()) - 1;
+	}
+	
+	std::cout << "x: " << std::get<0>(head) << std::endl;
+	std::cout << "y: " << std::get<1>(head) << std::endl;
+	
+	this->_elems.pop_back();
+	this->_elems.push_front(head);
+	return ;
+}
+
+std::list <std::pair <int, int> > const &		Snake::get_elems(void) const
 {
 	return (this->_elems);
 }
@@ -43,7 +108,9 @@ std::list <std::pair <uint32_t, uint32_t> > const &		Snake::get_elems(void) cons
 Snake &			Snake::operator=(Snake const & rhs)
 {
 	this->_len = rhs.get_len();
+	this->_isAlive = rhs.get_isAlive();
 	this->_elems = rhs.get_elems();
+	this->_dir = Top;
 	return (*this);
 }
 

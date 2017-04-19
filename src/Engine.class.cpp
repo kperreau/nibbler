@@ -12,16 +12,27 @@
 
 #include "Engine.class.hpp"
 
-Engine::Engine(uint32_t width, uint32_t height, uint32_t nb_players)
+Engine::Engine(uint32_t width, uint32_t height, uint32_t nb_players) : _rate(0)
 {
 	if (nb_players < 1 && nb_players > 4)
-		exit (-1);
+	{
+		std::cerr << "Bad players number" << std::endl;
+		return ;
+	}
+	
+	if (width < 100 * nb_players || height < 100 * nb_players)
+	{
+		std::cerr << "Window size too small" << std::endl;
+		return ;
+	}
 	
 	this->_nbPlayers = nb_players;
-	this->_listPlayers = new std::vector <Snake> (nb_players);
+	this->_nbPlayersAlive = nb_players;
 	this->_width = width;
 	this->_height = height;
-	// this->run();		// run the game
+	for (int i = 0; i < nb_players; ++i)
+		this->_listPlayers.push_back(new Snake(std::pair <int, int>(this->_width / SQUARE / 2  - (nb_players * 2) + i * 2, this->_height / SQUARE / 2)));
+	this->run();		// run the game
 	return ;
 }
 
@@ -33,27 +44,104 @@ Engine::Engine(Engine const & src)
 
 Engine::~Engine(void)
 {
-	this->_listPlayers->clear();
+	if (!this->_listPlayers.empty())
+		this->_listPlayers.clear();
 	return ;
 }
 
 void					Engine::run(void)
 {
+	// srand(time(0));
+	auto	time = Clock::now();
+	auto	oldtime = Clock::now();
+	long	duration = 0;
+	
+	;
+
 	while (1)
 	{
-		
+		time = Clock::now();
+		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
+		// this->setRate();
+		if (duration < 700000000)
+			continue ;
+		oldtime = Clock::now();
+		this->checkPlayers();
+		if (this->_nbPlayersAlive < 1)
+		{
+			std::cout << "Game over" << std::endl;
+			return ;
+		}
 	}
 	return ;
 }
 
-Snake const &			Engine::get_player_by_id(uint32_t id) const
+void					Engine::checkPlayers(void)
 {
-	return (this->_listPlayers->at(id));
+	for (auto it = this->_listPlayers.begin() ; it != this->_listPlayers.end(); ++it)
+	{
+		(*it)->move();
+		if (this->checkCollision(**it) == 1)
+		{
+			std::cout << "Collision snake id: " << (*it)->getID() << std::endl;
+			--this->_nbPlayersAlive;
+			(*it)->set_isAlive(0);
+			delete *it;
+		}
+	}
+	return ;
 }
 
-std::vector <Snake> *	Engine::get_players_list(void) const
+int						Engine::checkCollision(Snake const & snake)
+{
+	std::pair <int, int> head = snake.get_elems().front();
+
+	if (std::get<0>(head) > this->get_game_width()
+		|| std::get<1>(head) > this->get_game_height())
+		return (1);
+	return (0);
+}
+
+long					Engine::getRate(void) const
+{
+	return (this->_rate);
+}
+
+void					Engine::setRate(void)
+{
+	return ;
+}
+
+// void					Engine::setRate(void)
+// {
+	// static clock_t	oldtime = 0;
+	// static clock_t	time = 0;
+
+	// oldtime = time;
+	// time = clock();
+	// if ((time - oldtime) > 0)
+		// this->_rate = CLOCKS_PER_SEC / (time - oldtime);
+	// return ;
+// }
+
+Snake const *			Engine::get_player_by_id(uint32_t id) const
+{
+	return (this->_listPlayers.at(id));
+}
+
+std::vector <Snake *>	Engine::get_players_list(void) const
 {
 	return (this->_listPlayers);
+}
+
+uint32_t				Engine::get_game_height(void) const
+{
+	return (this->_height / SQUARE);
+}
+
+uint32_t				Engine::get_game_width(void) const
+{
+	return (this->_width / SQUARE);
 }
 
 uint32_t				Engine::get_height(void) const

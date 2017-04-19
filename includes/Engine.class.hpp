@@ -14,11 +14,20 @@
 # define ENGINE_CLASS_HPP
 # include <iostream>
 # include <string>
+# include <ctime>
 # include <vector>
 # include <sstream>
 # include <cstdint>
 # include <utility>
+# include <chrono>
+# include <ratio>
 # include "Snake.class.hpp"
+
+# define SQUARE 8
+
+typedef std::chrono::high_resolution_clock Clock;
+
+
 
 class Engine
 {
@@ -29,16 +38,25 @@ class Engine
 		uint32_t				get_nbPlayers(void) const;
 		uint32_t				get_width(void) const;
 		uint32_t				get_height(void) const;
-		Snake const &			get_player_by_id(uint32_t id) const;
-		std::vector <Snake> *	get_players_list(void) const;
+		uint32_t				get_game_width(void) const;
+		uint32_t				get_game_height(void) const;
+		Snake const *			get_player_by_id(uint32_t id) const;
+		std::vector <Snake *>	get_players_list(void) const;
 		void					run(void);
+		void					checkPlayers(void);
+		void					setRate(void);
+		long					getRate(void) const;
+		int						checkCollision(Snake const & snake);
 		Engine &				operator=(Engine const & rhs);
 
 	private:
 		uint32_t					_nbPlayers;
+		uint32_t					_nbPlayersAlive;
 		uint32_t					_height;
 		uint32_t					_width;
-		std::vector <Snake> *		_listPlayers;
+		long						_rate;
+		// std::vector <Snake> *		_listPlayers;
+		std::vector <Snake *>		_listPlayers;
 };
 
 std::ostream &		operator<<(std::ostream & o, Engine const & i);
