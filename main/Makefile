@@ -6,62 +6,71 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2017/04/20 19:51:47 by kperreau         ###   ########.fr        #
+#    Updated: 2017/04/16 19:35:17 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libsfml.dylib
+NAME = Nibbler
 
-SRCDIR = ./
+# Dir vars
 
-CFILES = Sfml.class.cpp
+SRCDIR = ./src
 
-SRC = $(patsubst %, $(SRCDIR)%, $(CFILES))
+INCLUDESDIR = ./includes
 
-OBJ = $(SRC:.cpp=.o)
+# Files vars
 
-INCLUDEDIR = .
+MAIN = main.cpp
 
-HEADERS = Sfml.class.hpp
+CFILES = Engine.class.cpp Snake.class.cpp
+
+SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
+
+OBJ = $(SRC:.cpp=.o) $(MAIN:.cpp=.o)
+
+HFILES = Engine.class.hpp Snake.class.hpp
+
+HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 
 # COMPILATION
-ERRORFLAGS = # -Wall -Werror -Wextra
 
-INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/sfml/include/
+# ERRORFLAGS = -Wall -Werror -Wextra -march=native -Ofast
+ERRORFLAGS = --std=c++11 -march=native -O2
 
-LIBFLAGS = -L../../glib/sfml/lib/ -lsfml-system -lsfml-window -lsfml-graphics \
+INCLUDEFLAGS = -I $(INCLUDESDIR)/
 
-FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) -std=c++11 -O2
+FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS)
 
-# CC = g++
 CC = clang++
+# CC = g++
 
-# Colors vars
-DEF_C = '\033[0m'
-OK_C = '\033[32m'
-ERR_C = '\033[31m'
-WRN_C = '\033[33m'
-INF_C = '\033[35m'
+# Git vars
 
-OK = $(OK_C)[OK]$(DEF_C)
-ERR = $(ERR_C)[Error]$(DEF_C)
-WAR = $(WRN_C)[Warning]$(DEF_C)
-INF = $(INF_C)[Info]$(DEF_C)
+TOGIT =	$(SRC) \
+		$(HEADERS) \
+		$(MAIN) \
+		Makefile \
+		auteur \
 
-# RULES
+# Rules
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-		$(CC) -shared $(OBJ) $(FLAGS) $(LIBFLAGS) -o $(NAME)
+			$(CC) $(FLAGS) $(OBJ) -ldl -o $(NAME)
 
 re: fclean all
 
-%.o: %.cpp
-		$(CC) -fPIC $(FLAGS) -o $@ -c $<
-
 clean:
-		rm -f $(OBJ)
+	rm -f $(OBJ)
 
 fclean: clean
-		rm -f $(NAME)
+	rm -f $(NAME)
+
+%.o: %.cpp
+	$(CC) -o $@ -c $< $(FLAGS)
+
+git:
+	git add $(TOGIT)
+	git commit -m 'auto update'
+	git push
