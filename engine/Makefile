@@ -41,8 +41,8 @@ INCLUDEFLAGS = -I $(INCLUDESDIR)/
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS)
 
-# CC = clang++
-CC = g++
+CC = clang++
+# CC = g++
 
 # Git vars
 

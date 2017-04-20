@@ -33,7 +33,8 @@ LIBFLAGS = -L./../../glib/sfml/lib -lsfml-system -lsfml-window -lsfml-graphics
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) -std=c++11 -O2
 
-CC = g++
+# CC = g++
+CC = clang++
 
 # Colors vars
 DEF_C = '\033[0m'
@@ -57,7 +58,7 @@ $(NAME): $(OBJ)
 re: fclean all
 
 %.o: %.cpp
-		$(CC) -fPIC $(FLAGS) $(LIBFLAGS) -o $@ -c $<
+		$(CC) -fPIC $(FLAGS) -o $@ -c $<
 
 clean:
 		rm -f $(OBJ)
