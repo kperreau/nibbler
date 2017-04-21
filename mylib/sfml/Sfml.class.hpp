@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/16 20:16:16 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/04/21 17:42:15 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,35 @@
 # include <string>
 # include <ctime>
 # include <sstream>
+# include <SFML/Graphics.hpp>
 
-// class Sfml
-// {
-	// public:
+enum	input {
+	None,
+	Left,
+	Right,
+	Top,
+	Bottom,
+};
 
-// };
+class Sfml
+{
+	public:
+		Sfml(int width, int height);
+		Sfml(Sfml const & src);
+		~Sfml(void);
+		Sfml &	operator=(Sfml const & rhd);
+		sf::RenderWindow &		getWindow(void);
+		void					display(void);
+		void					clear(void);
+		void					draw(int x, int y);
+		input					getInput(void);
 
-// std::ostream &		operator<<(std::ostream & o, Engine const & i);
+	private:
+		int							_width;
+		int							_height;
+		sf::RenderWindow			_window;
+};
+
+//std::ostream &		operator<<(std::ostream & o, Sfml const & i);
 
 #endif

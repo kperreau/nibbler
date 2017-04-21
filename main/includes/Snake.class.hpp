@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:32 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/16 19:39:20 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/04/21 17:42:33 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <utility>
 
 enum	input {
+	None,
 	Left,
 	Right,
 	Top,
@@ -38,16 +39,17 @@ class Snake
 		void				set_isAlive(char val);
 		char				get_isAlive(void) const;
 		input				getDir(void) const;
-		uint32_t			getID(void) const;
+		void				setDir(input val);
+		int					getID(void) const;
 		std::list <std::pair <int, int> > const &	get_elems(void) const;
 
 	private:
 		uint32_t			_len;
 		char				_isAlive;
 		input				_dir;
-		const uint32_t		_id;
+		const int			_id;
 		uint32_t			_speed;
-		static uint32_t		_nextID;
+		static int			_nextID;
 		std::list <std::pair <int, int> >		_elems;
 };
 

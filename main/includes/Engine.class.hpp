@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/20 20:34:00 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/04/21 15:56:02 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,18 @@
 
 typedef std::chrono::high_resolution_clock Clock;
 
-
-
 class Engine
 {
 	public:
-		Engine(uint32_t width, uint32_t height, uint32_t nb_players, void *handle);
+		Engine(int  width, int height, int nb_players, void *handle);
 		Engine(Engine const & src);
 		~Engine(void);
-		uint32_t				get_nbPlayers(void) const;
-		uint32_t				get_width(void) const;
-		uint32_t				get_height(void) const;
-		uint32_t				get_game_width(void) const;
-		uint32_t				get_game_height(void) const;
-		Snake const *			get_player_by_id(uint32_t id) const;
+		int						get_nbPlayers(void) const;
+		int						get_width(void) const;
+		int						get_height(void) const;
+		int						get_game_width(void) const;
+		int						get_game_height(void) const;
+		Snake const *			get_player_by_id(int id) const;
 		std::vector <Snake *>	get_players_list(void) const;
 		void					run(void);
 		void					checkPlayers(void);
@@ -51,10 +49,10 @@ class Engine
 		Engine &				operator=(Engine const & rhs);
 
 	private:
-		uint32_t					_nbPlayers;
-		uint32_t					_nbPlayersAlive;
-		uint32_t					_height;
-		uint32_t					_width;
+		int							_nbPlayers;
+		int							_nbPlayersAlive;
+		int							_height;
+		int							_width;
 		uint32_t					_speed;
 		long						_rate;
 		void *						_handle;
