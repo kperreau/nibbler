@@ -28,6 +28,16 @@
 
 typedef std::chrono::high_resolution_clock Clock;
 
+typedef struct	data
+{
+	input		in = None;
+	int			x = 0;
+	int			y = 0;
+	int			playerID = 0;
+	int			head = 0;
+	int			color = 0;
+}				s_data;
+
 class Engine
 {
 	public:
@@ -56,6 +66,7 @@ class Engine
 		uint32_t					_speed;
 		long						_rate;
 		void *						_handle;
+		int const					_color[4] = {0xff, 0xff00, 0xff0000};
 		std::vector <Snake *>		_listPlayers;
 };
 

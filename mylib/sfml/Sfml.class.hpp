@@ -26,6 +26,16 @@ enum	input {
 	Bottom,
 };
 
+typedef struct	data
+{
+	input		in = None;
+	int			x = 0;
+	int			y = 0;
+	int			playerID = 0;
+	int			head = 0;
+	int			color = 0;
+}				s_data;
+
 class Sfml
 {
 	public:
@@ -36,8 +46,9 @@ class Sfml
 		sf::RenderWindow &		getWindow(void);
 		void					display(void);
 		void					clear(void);
-		void					draw(int x, int y);
+		void					draw(s_data * data);
 		input					getInput(void);
+		int						getColor(int color, int type);
 
 	private:
 		int							_width;

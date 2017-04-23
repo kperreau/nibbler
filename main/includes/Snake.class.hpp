@@ -30,7 +30,7 @@ enum	input {
 class Snake
 {
 	public:
-		Snake(std::pair <int, int> const & start);
+		Snake(std::pair <int, int> const & start, int const color);
 		Snake(Snake const & src);
 		~Snake(void);
 		Snake &				operator=(Snake const & rhs);
@@ -41,6 +41,7 @@ class Snake
 		input				getDir(void) const;
 		void				setDir(input val);
 		int					getID(void) const;
+		int					getColor(void) const;
 		std::list <std::pair <int, int> > const &	get_elems(void) const;
 
 	private:
@@ -49,6 +50,7 @@ class Snake
 		input				_dir;
 		const int			_id;
 		uint32_t			_speed;
+		int					_color;
 		static int			_nextID;
 		std::list <std::pair <int, int> >		_elems;
 };

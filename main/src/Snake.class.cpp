@@ -12,8 +12,8 @@
 
 #include "Snake.class.hpp"
 
-Snake::Snake(std::pair <int, int> const & start)
-: _len(4), _isAlive(1), _dir(Top), _id(_nextID++)
+Snake::Snake(std::pair <int, int> const & start, int const color)
+: _len(4), _isAlive(1), _dir(Top), _id(_nextID++), _color(color)
 {
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start)));
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 1));
@@ -62,6 +62,11 @@ char		Snake::get_isAlive(void) const
 int			Snake::getID(void) const
 {
 	return (this->_id);
+}
+
+int			Snake::getColor(void) const
+{
+	return (this->_color);
 }
 
 input		Snake::getDir(void) const

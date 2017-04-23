@@ -59,13 +59,24 @@ void			Sfml::clear(void)
 	return ;
 }
 
-void			Sfml::draw(int x, int y)
+int			Sfml::getColor(int color, int type)
+{
+	return ((color >> (type * 8)) & 0xff);
+}
+
+void			Sfml::draw(s_data *data)
 {
 	if (this->_window.isOpen())
 	{
 		sf::RectangleShape rectangle(sf::Vector2f(8, 8));
-		rectangle.setFillColor(sf::Color(100, 250, 50));
-		rectangle.setPosition(x * 8, y * 8);
+		rectangle.setFillColor(
+			sf::Color(
+				  this->getColor(data->color, 0)
+				, this->getColor(data->color, 1)
+				, this->getColor(data->color, 2)
+				)
+			);
+		rectangle.setPosition(data->x * 8, data->y * 8);
 		this->_window.draw(rectangle);
 	}
 	return ;
@@ -77,6 +88,22 @@ input			Sfml::getInput(void)
 	{
 		return (Left);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		return (Right);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		return (Bottom);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		return (Top);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	{
+		exit (0);
+	}
 	return (None);
 }
 
@@ -85,12 +112,12 @@ Sfml &			Sfml::operator=(Sfml const & rhd)
 	return (*this);
 }
 
-extern "C" int		glib(int val, int val2, int val3)
+extern "C" int		glib(int val, s_data *data)
 {
 	switch (val)
 	{
 		case 1:
-			static Sfml		sfml(val2, val3);
+			static Sfml		sfml(data->x, data->y);
 			break ;
 		case 2:
 			sfml.clear();
@@ -99,10 +126,10 @@ extern "C" int		glib(int val, int val2, int val3)
 			sfml.display();
 			break ;
 		case 4:
-			sfml.draw(val2, val3);
+			sfml.draw(data);
 			break ;
 		case 5:
-			sfml.getInput();
+			data->in = sfml.getInput();
 			break ;
 	}
 	return (0);

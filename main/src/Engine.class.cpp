@@ -32,7 +32,17 @@ Engine::Engine(int width, int height, int nb_players, void *handle)
 	this->_width = width;
 	this->_height = height;
 	for (int i = 0; i < nb_players; ++i)
-		this->_listPlayers.push_back(new Snake(std::pair <int, int>(this->_width / SQUARE / 2  - (nb_players * 2) + i * 2, this->_height / SQUARE / 2)));
+	{
+		this->_listPlayers.push_back(
+			new Snake(
+				std::pair <int, int>(
+					  this->_width / SQUARE / 2  - (nb_players * 2) + i * 2
+					, this->_height / SQUARE / 2
+					)
+				, this->_color[i]
+				)
+			);
+	}
 	this->run();		// run the game
 	return ;
 }
@@ -50,19 +60,15 @@ Engine::~Engine(void)
 	return ;
 }
 
-typedef struct	data
-{
-	input	in = None;
-}				s_data;
-
 void					Engine::run(void)
 {
 	auto	time = Clock::now();
 	auto	oldtime = Clock::now();
 	long	duration = 0;
-	int		(*f)(int, int, int);
+	int		(*f)(int, s_data *);
 	char *	error;
 	input	in = None;
+	s_data	data;
 
 	*(void**)(&f) = dlsym(this->_handle, "glib");
 	if ((error = dlerror()) != NULL)  {
@@ -71,26 +77,33 @@ void					Engine::run(void)
 	}
 
 
-	f(1, this->_width, this->_height);
+	data.x = this->_width;
+	data.y = this->_height;
+	f(1, &data);
 	while (1)
 	{
-		f(2, 0, 0);
+		f(2, &data);
 		for (auto it = this->_listPlayers.begin() ; it != this->_listPlayers.end(); ++it)
 		{
-			in = (input)f(5, 0, 0);
-			//std::cout << in << std::endl;
-			if (in != None)
-				(*it)->setDir(in);
+			f(5, &data);
+			if (data.in != None)
+				(*it)->setDir(data.in);
 			auto elem = (*it)->get_elems();
 			for (auto it2 = elem.begin(); it2 != elem.end(); ++it2)
 			{
-				f(4, std::get<0>(*it2), std::get<1>(*it2));
+
+				data.color = (*it)->getColor();
+				if (it2 == elem.begin())
+					data.color /= 2;
+				data.x = std::get<0>(*it2);
+				data.y = std::get<1>(*it2);
+				f(4, &data);
 			}
 		}
-		f(3, 0, 0);
+		f(3, &data);
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
-		if (duration < this->_speed * 500000)
+		if (duration < this->_speed * 100000)
 			continue ;
 		oldtime = Clock::now();
 		this->checkPlayers();

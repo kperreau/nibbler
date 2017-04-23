@@ -1,7 +1,7 @@
 #!/bin/sh
-git clone https://github.com/SFML/SFML/ glib/sfml
-cd glib/sfml
+git clone https://github.com/SFML/SFML/ /tmp/npuzzle_glib/sfml
+cd /tmp/npuzzle_glib/sfml
 cmake .
 make sfml-graphics
-cp -r ../../glib/sfml/extlibs/libs-osx/Frameworks/ ~/Library/.
-export LD_LIBRARY_PATH="/Users/kperreau/42/nibbler/glib/sfml/lib"
+cp -r /tmp/npuzzle_glib/glib/sfml/extlibs/libs-osx/Frameworks/ ~/Library/.
+export LD_LIBRARY_PATH="/tmp/npuzzle_glib/sfml/lib"
