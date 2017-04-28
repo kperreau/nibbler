@@ -13,7 +13,7 @@
 #include "Engine.class.hpp"
 
 Engine::Engine(int width, int height, int nb_players, void *handle)
-: _speed(500), _rate(0), _handle(handle)
+: _speed(150), _rate(0), _handle(handle)
 {
 	if (nb_players < 1 && nb_players > 4)
 	{
@@ -102,7 +102,9 @@ void					Engine::resetMap(void)
 void					Engine::fillMap(void)
 {
 	int		coord;
-	
+
+	this->_emptyCells.clear();
+
 	// fill snake cells
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{
@@ -126,6 +128,8 @@ void					Engine::fillMap(void)
 
 	for (int i = 0; i < this->_map->size(); ++i)
 	{
+		if (this->_map->at(i) != CELL_DEFAULT)
+			continue ;
 		this->_emptyCells.push_back(
 			std::pair <int, int>(
 				  i % this->get_game_width()
