@@ -12,8 +12,8 @@
 
 #include "Engine.class.hpp"
 
-Engine::Engine(int width, int height, int nb_players, void *handle)
-: _speed(150), _rate(0), _handle(handle)
+Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t difficulty)
+: _speed(150), _score(0), _rate(0), _handle(handle), _difficulty(difficulty)
 {
 	if (nb_players < 1 && nb_players > 4)
 	{
@@ -73,7 +73,8 @@ Engine::~Engine(void)
 
 void					Engine::genFoods(void)
 {
-	if (this->_nbPlayersAlive - this->_listFoods.size() < 1)
+	if (this->_nbPlayersAlive < 1
+		|| this->_listFoods.size() > this->_nbPlayersAlive)
 		return ;
 	
 	for (int i = 0; i < this->_nbPlayersAlive - this->_listFoods.size(); ++i)
@@ -87,6 +88,27 @@ void					Engine::genFoods(void)
 			) = CELL_FOOD;
 
 		this->_listFoods.push_back(std::pair <int, int>(std::get<0>(*it), std::get<1>(*it)));
+		this->_emptyCells.erase(it);
+	}
+	return ;
+}
+
+void					Engine::genRocks(void)
+{
+	if (this->_difficulty < 3)
+		return ;
+	
+	for (int i = 0; i < this->_score - this->_listRocks.size(); ++i)
+	{
+		uint32_t	n = std::rand() % this->_emptyCells.size();
+		auto		it = this->_emptyCells.begin();
+		std::advance(it, n);
+
+		this->_map->at(
+			std::get<1>(*it) * this->get_game_width() + std::get<0>(*it)
+			) = CELL_ROCK;
+
+		this->_listRocks.push_back(std::pair <int, int>(std::get<0>(*it), std::get<1>(*it)));
 		this->_emptyCells.erase(it);
 	}
 	return ;
@@ -123,6 +145,15 @@ void					Engine::fillMap(void)
 		this->_map->at(
 			std::get<0>(*it) + std::get<1>(*it) * this->get_game_width()
 			) = CELL_FOOD;
+			//this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
+	}
+
+
+	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
+	{
+		this->_map->at(
+			std::get<0>(*it) + std::get<1>(*it) * this->get_game_width()
+			) = CELL_ROCK;
 			//this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
 	}
 
@@ -169,7 +200,21 @@ void					Engine::drawFoods(void)
 		this->_data.color[1] = 0xffffff;
 		this->_data.x = std::get<0>(*it);
 		this->_data.y = std::get<1>(*it);
-		this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
+		this->_func_lib(Ins_Draw, &(this->_data));		// Draw foods
+	}
+	return ;
+}
+
+
+void					Engine::drawRocks(void)
+{
+	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
+	{
+		this->_data.color[0] = 0x770033;
+		this->_data.color[1] = 0xffffff;
+		this->_data.x = std::get<0>(*it);
+		this->_data.y = std::get<1>(*it);
+		this->_func_lib(Ins_Draw, &(this->_data));		// Draw rocks
 	}
 	return ;
 }
@@ -200,6 +245,7 @@ void					Engine::run(void)
 		this->_func_lib(Ins_Input, &(this->_data));		// get inputs
 		this->drawPlayers();
 		this->drawFoods();
+		this->drawRocks();
 		this->_func_lib(Ins_Display, &(this->_data));	// Display
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
@@ -208,6 +254,8 @@ void					Engine::run(void)
 		oldtime = Clock::now();
 		this->checkPlayers();
 		this->resetMap();
+		this->genFoods();
+		this->genRocks();
 		this->fillMap();
 		if (this->_nbPlayersAlive < 1)
 		{
@@ -238,7 +286,11 @@ void					Engine::checkPlayers(void)
 		else if (collision == 2)
 		{
 			(*it)->eat();
-			this->genFoods();
+			++this->_score;
+			if (this->_difficulty > 1 && this->_speed > 50)
+			{
+				this->_speed -= 2;
+			}
 		}
 	}
 	return ;
@@ -255,29 +307,25 @@ int						Engine::checkCollision(Snake const & snake)
 		|| std::get<0>(head) < 0 || std::get<1>(head) < 0)
 		return (1);
 	
-	//for (int i = 0; i < this->_map->size(); ++i)
-	//{
-		//x = i % this->get_game_width();
-		//y = i / this->get_game_width();
 
-		int coord = std::get<1>(head) * this->get_game_width() + std::get<0>(head);
+	int coord = std::get<1>(head) * this->get_game_width() + std::get<0>(head);
 
-		if (this->_map->at(coord) == CELL_FOOD)
+	if (this->_map->at(coord) == CELL_SNAKE
+		|| this->_map->at(coord) == CELL_ROCK)
+		return (1);
+
+	if (this->_map->at(coord) == CELL_FOOD)
+	{
+		for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
 		{
-			for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
+			if (std::get<0>(*it) == std::get<0>(head)
+				&& std::get<1>(*it) == std::get<1>(head))
 			{
-				if (std::get<0>(*it) == std::get<0>(head)
-					&& std::get<1>(*it) == std::get<1>(head))
-				{
-					it = this->_listFoods.erase(it);
-					return (2);
-				}
+				it = this->_listFoods.erase(it);
+				return (2);
 			}
 		}
-
-		if (this->_map->at(coord) == CELL_SNAKE)
-			return (1);
-	//}
+	}
 	return (0);
 }
 

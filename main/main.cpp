@@ -17,15 +17,17 @@
 #include <unistd.h>
 #include <ctime>
 #include <dlfcn.h>
+#include <regex>
 #include "Engine.class.hpp"
 #include "Snake.class.hpp"
 
 typedef struct	s_opts
 {
 	bool		verbose = false;
-	uint32_t	width = 0;
-	uint32_t	height = 0;
+	int			width = 0;
+	int			height = 0;
 	uint32_t	players = 1;
+	uint32_t	difficulty = 1;
 }				t_opts;
 
 void		put_error(std::string error)
@@ -37,7 +39,8 @@ void		put_error(std::string error)
 void		usage(char *name)
 {
 	std::cout << "usage: " << name << " [xyph]" << std::endl;
-	std::cout << "'-v' for a verbose output" << std::endl;
+	//std::cout << "'-v' for a verbose output" << std::endl;
+	std::cout << "'-d' for difficulty. 1 - Normal, 2 - Medium, 3 - Hard" << std::endl;
 	std::cout << "'-x size' to set width of window" << std::endl;
 	std::cout << "'-y size' to set height of window" << std::endl;
 	std::cout << "'-p' to specify number of players " << std::endl;
@@ -49,18 +52,28 @@ t_opts		options(int ac, char **av)
 {
 	t_opts	opts;
 	int		ch;
+	std::regex regex_pattern("(-?|\\+?)[0-9]+");
 
-	while ((ch = getopt(ac, av, "hx:y:vp:")) != -1)
+	while ((ch = getopt(ac, av, "hx:y:vp:d:")) != -1)
 	{
 		switch (ch)
 		{
 			case 'h':
 				usage(av[0]);
 			case 'x':
-				opts.height = atoi(optarg);
+				if (!regex_match(optarg, regex_pattern))
+					put_error("Wrong window value");
+				opts.width = atoi(optarg);
 				break;
 			case 'y':
-				opts.width = atoi(optarg);
+				if (!regex_match(optarg, regex_pattern))
+					put_error("Wrong window value");
+				opts.height = atoi(optarg);
+				break;
+			case 'd':
+				if (!regex_match(optarg, regex_pattern))
+					put_error("Wrong difficulty value");
+				opts.difficulty = atoi(optarg);
 				break;
 			case 'p':
 				opts.players = atoi(optarg);
@@ -78,6 +91,10 @@ t_opts		options(int ac, char **av)
 	av += optind;
 	if (!opts.width || !opts.height)
 		put_error("You have to specify the window size");
+	if (opts.width < 0 || opts.height < 0)
+		put_error("Please type positives values for window format");
+	if (opts.difficulty < 1 || opts.difficulty > 3)
+		put_error("Wrong value for difficulty");
 	return (opts);
 }
 
@@ -99,7 +116,7 @@ int		main(int ac, char **av)
 		exit(1);
 	}
 
-	Engine	engine(opts.width, opts.height, opts.players, handle);
+	Engine	engine(opts.width, opts.height, opts.players, handle, opts.difficulty);
 	dlclose(handle);
 	return (0);
 }

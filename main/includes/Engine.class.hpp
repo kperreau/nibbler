@@ -58,7 +58,7 @@ typedef struct	data
 class Engine
 {
 	public:
-		Engine(int  width, int height, int nb_players, void *handle);
+		Engine(int  width, int height, int nb_players, void *handle, uint32_t difficulty);
 		Engine(Engine const & src);
 		~Engine(void);
 		int						get_nbPlayers(void) const;
@@ -75,9 +75,11 @@ class Engine
 		int						checkCollision(Snake const & snake);
 		void					drawPlayers(void);
 		void					drawFoods(void);
+		void					drawRocks(void);
 		void					fillMap(void);
 		void					resetMap(void);
 		void					genFoods(void);
+		void					genRocks(void);
 		Engine &				operator=(Engine const & rhs);
 
 	private:
@@ -86,6 +88,8 @@ class Engine
 		int							_height;
 		int							_width;
 		uint32_t					_speed;
+		uint32_t					_score;
+		uint32_t					_difficulty;
 		long						_rate;
 		void *						_handle;
 		s_data						_data;
@@ -95,6 +99,7 @@ class Engine
 		std::vector <cell> *		_map;
 		std::list <std::pair <int, int> >		_listFoods;
 		std::list <std::pair <int, int> >		_emptyCells;
+		std::list <std::pair <int, int> >		_listRocks;
 };
 
 std::ostream &		operator<<(std::ostream & o, Engine const & i);

@@ -4,4 +4,7 @@ cd /tmp/npuzzle_glib/sfml
 cmake .
 make sfml-graphics
 cp -r /tmp/npuzzle_glib/glib/sfml/extlibs/libs-osx/Frameworks/ ~/Library/.
-export LD_LIBRARY_PATH="/tmp/npuzzle_glib/sfml/lib"
+mkdir /tmp/npuzzle_glib
+mkdir /tmp/npuzzle_glib/sfml
+cp glib/sfml/lib/* /tmp/npuzzle_glib/sfml
+export LD_LIBRARY_PATH="/tmp/npuzzle_glib/sfml"
