@@ -44,6 +44,11 @@ uint32_t		Snake::get_len(void) const
 
 void		Snake::setDir(input val)
 {
+	if ((val == Top && this->_dir == Bottom)
+		|| (val == Bottom && this->_dir == Top)
+		|| (val == Left && this->_dir == Right)
+		|| (val == Right && this->_dir == Left))
+		return ;
 	this->_dir = val;
 	return ;
 }
@@ -78,7 +83,7 @@ void			Snake::move(void)
 {
 	std::pair <int, int> head;
 
-	std::cout << "snake id: " << _id << " is moving" << std::endl;
+	//std::cout << "snake id: " << _id << " is moving" << std::endl;
 
 	switch (this->_dir)
 	{
@@ -103,11 +108,15 @@ void			Snake::move(void)
 			std::get<1>(head) = std::get<1>(this->_elems.front()) - 1;
 	}
 	
-	//std::cout << "x: " << std::get<0>(head) << std::endl;
-	//std::cout << "y: " << std::get<1>(head) << std::endl;
-	
+	this->_last = this->_elems.back();
 	this->_elems.pop_back();
 	this->_elems.push_front(head);
+	return ;
+}
+
+void			Snake::eat(void)
+{
+	this->_elems.push_back(this->_last);
 	return ;
 }
 

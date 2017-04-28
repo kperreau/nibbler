@@ -42,6 +42,7 @@ class Snake
 		void				setDir(input val);
 		int					getID(void) const;
 		int					getColor(void) const;
+		void				eat(void);
 		std::list <std::pair <int, int> > const &	get_elems(void) const;
 
 	private:
@@ -52,6 +53,7 @@ class Snake
 		uint32_t			_speed;
 		int					_color;
 		static int			_nextID;
+		std::pair <int, int>_last;
 		std::list <std::pair <int, int> >		_elems;
 };
 

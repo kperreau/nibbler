@@ -68,43 +68,52 @@ void			Sfml::draw(s_data *data)
 {
 	if (this->_window.isOpen())
 	{
-		sf::RectangleShape rectangle(sf::Vector2f(8, 8));
+		sf::RectangleShape rectangle(sf::Vector2f(data->square, data->square));
 		rectangle.setFillColor(
 			sf::Color(
-				  this->getColor(data->color, 0)
-				, this->getColor(data->color, 1)
-				, this->getColor(data->color, 2)
+				  this->getColor(data->color[0], 0)
+				, this->getColor(data->color[0], 1)
+				, this->getColor(data->color[0], 2)
 				)
 			);
-		rectangle.setPosition(data->x * 8, data->y * 8);
+		rectangle.setOutlineThickness(1);
+		rectangle.setOutlineColor(
+			sf::Color(
+				  this->getColor(data->color[1], 0)
+				, this->getColor(data->color[1], 1)
+				, this->getColor(data->color[1], 2)
+				)
+			);
+		rectangle.setPosition(data->x * data->square, data->y * data->square);
 		this->_window.draw(rectangle);
 	}
 	return ;
 }
 
-input			Sfml::getInput(void)
+void			Sfml::getInput(s_data *data)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		return (Left);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		return (Right);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		return (Bottom);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		return (Top);
-	}
+		data->in[0] = Left;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		data->in[0] = Right;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		data->in[0] = Bottom;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		data->in[0] = Top;
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		data->in[1] = Left;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		data->in[1] = Right;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		data->in[1] = Bottom;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		data->in[1] = Top;
+	//else
+	//	data->in[0] = None;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
 		exit (0);
-	}
-	return (None);
+	return ;
 }
 
 Sfml &			Sfml::operator=(Sfml const & rhd)
@@ -112,25 +121,27 @@ Sfml &			Sfml::operator=(Sfml const & rhd)
 	return (*this);
 }
 
-extern "C" int		glib(int val, s_data *data)
+extern "C" int		glib(instruct val, s_data *data)
 {
 	switch (val)
 	{
-		case 1:
+		case Ins_Create:
 			static Sfml		sfml(data->x, data->y);
 			break ;
-		case 2:
+		case Ins_Clear:
 			sfml.clear();
 			break ;
-		case 3:
+		case Ins_Display:
 			sfml.display();
 			break ;
-		case 4:
+		case Ins_Draw:
 			sfml.draw(data);
 			break ;
-		case 5:
-			data->in = sfml.getInput();
+		case Ins_Input:
+			sfml.getInput(data);
 			break ;
+		default:
+			;
 	}
 	return (0);
 }
