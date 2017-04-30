@@ -173,20 +173,19 @@ void					Engine::fillMap(void)
 
 void					Engine::drawPlayers(void)
 {
+	int  color = 0;
+
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{
 		auto elem = (*it)->get_elems();
 		for (auto it2 = elem.begin(); it2 != elem.end(); ++it2)
 		{
-			//if ((*it)->get_isAlive() == 0)
-			//	continue ;
-			this->_data.color[0] = (*it)->getColor();
-			this->_data.color[1] = 0xffffff;
+			color = (*it)->getColor();
 			if (it2 == elem.begin())
-				this->_data.color[0] /= 2;
+				color /= 2;
 			this->_data.x = std::get<0>(*it2);
 			this->_data.y = std::get<1>(*it2);
-			this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
+			this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color);		// Draw snakes
 		}
 	}
 	return ;
@@ -196,11 +195,7 @@ void					Engine::drawFoods(void)
 {
 	for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
 	{
-		this->_data.color[0] = 0xff00ff;
-		this->_data.color[1] = 0xffffff;
-		this->_data.x = std::get<0>(*it);
-		this->_data.y = std::get<1>(*it);
-		this->_func_lib(Ins_Draw, &(this->_data));		// Draw foods
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xff00ff);		// Draw foods
 	}
 	return ;
 }
@@ -210,12 +205,17 @@ void					Engine::drawRocks(void)
 {
 	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
 	{
-		this->_data.color[0] = 0x770033;
-		this->_data.color[1] = 0xffffff;
-		this->_data.x = std::get<0>(*it);
-		this->_data.y = std::get<1>(*it);
-		this->_func_lib(Ins_Draw, &(this->_data));		// Draw rocks
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0x770033);		// Draw rocks
 	}
+	return ;
+}
+
+void					Engine::getInputs(void) const
+{
+	if (this->_glib->getInput(4) == Exit)
+		exit (0);
+	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
+		(*it)->setNextDir(this->_glib->getInput((*it)->getID()));
 	return ;
 }
 
@@ -224,29 +224,28 @@ void					Engine::run(void)
 	auto	time = Clock::now();
 	auto	oldtime = Clock::now();
 	long	duration = 0;
-	//int		(*func_lib)(instruct, s_data *);
+	IGlib *	(*func_lib)();
 	char *	error;
 	input	in = None;
 
-	*(void**)&(this->_func_lib) = dlsym(this->_handle, "glib");
+	*(void**)&(func_lib) = dlsym(this->_handle, "getGlib");
 	if ((error = dlerror()) != NULL)
 	{
 		fputs(error, stderr);
 		exit(1);
 	}
 
-	this->_data.x = this->_width;
-	this->_data.y = this->_height;
-	this->_func_lib(Ins_Create, &(this->_data));	// create window
+	this->_glib = func_lib();
+	this->_glib->init(this->_width, this->_height, SQUARE);	// create window
+
 	while (1)
 	{
-
-		this->_func_lib(Ins_Clear, &(this->_data));		// Clear screen
-		this->_func_lib(Ins_Input, &(this->_data));		// get inputs
+		this->_glib->clear();
+		this->getInputs();
 		this->drawPlayers();
 		this->drawFoods();
 		this->drawRocks();
-		this->_func_lib(Ins_Display, &(this->_data));	// Display
+		this->_glib->display();
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
 		if (duration < this->_speed * 1000000)
@@ -272,8 +271,8 @@ void					Engine::checkPlayers(void)
 
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{
-		if (this->_data.in[(*it)->getID()] != None)
-			(*it)->setDir(this->_data.in[(*it)->getID()]);
+		//if (this->_data.in[(*it)->getID()] != None)
+		//	(*it)->setDir(this->_data.in[(*it)->getID()]);
 		(*it)->move();
 		collision = this->checkCollision(**it);
 		if (collision == 1)

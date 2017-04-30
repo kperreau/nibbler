@@ -23,12 +23,13 @@
 # include <ratio>
 # include <dlfcn.h>
 # include "Snake.class.hpp"
+# include "IGlib.class.hpp"
 
 # define SQUARE 16
 
 typedef std::chrono::high_resolution_clock Clock;
 
-enum	instruct {
+/*enum	instruct {
 	Ins_None,
 	Ins_Create,
 	Ins_Clear,
@@ -36,6 +37,7 @@ enum	instruct {
 	Ins_Draw,
 	Ins_Input
 };
+*/
 
 enum	cell {
 	CELL_DEFAULT,
@@ -44,7 +46,7 @@ enum	cell {
 	CELL_ROCK
 };
 
-typedef struct	data
+/*typedef struct	data
 {
 	input		in[4] = {None};
 	int			x = 0;
@@ -54,6 +56,7 @@ typedef struct	data
 	int			color[4] = {0};
 	int			square = SQUARE;
 }				s_data;
+*/
 
 class Engine
 {
@@ -80,6 +83,7 @@ class Engine
 		void					resetMap(void);
 		void					genFoods(void);
 		void					genRocks(void);
+		void					getInputs(void) const;
 		Engine &				operator=(Engine const & rhs);
 
 	private:
@@ -93,8 +97,8 @@ class Engine
 		long						_rate;
 		void *						_handle;
 		s_data						_data;
+		IGlib *						_glib;
 		int const					_color[4] = {0xff, 0xff00, 0xff0000};
-		int							(*_func_lib)(instruct, s_data *);
 		std::list <Snake *>			_listPlayers;
 		std::vector <cell> *		_map;
 		std::list <std::pair <int, int> >		_listFoods;

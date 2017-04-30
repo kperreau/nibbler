@@ -13,7 +13,7 @@
 #include "Snake.class.hpp"
 
 Snake::Snake(std::pair <int, int> const & start, int const color)
-: _len(4), _isAlive(1), _dir(Top), _id(_nextID++), _color(color)
+: _len(4), _isAlive(1), _dir(Top), _id(_nextID++), _color(color), _nextDir(None)
 {
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start)));
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 1));
@@ -59,6 +59,13 @@ void		Snake::set_isAlive(char val)
 	return ;
 }
 
+void		Snake::setNextDir(input val)
+{
+	if (val != None)
+		this->_nextDir = val;
+	return ;
+}
+
 char		Snake::get_isAlive(void) const
 {
 	return (this->_isAlive);
@@ -83,8 +90,8 @@ void			Snake::move(void)
 {
 	std::pair <int, int> head;
 
-	//std::cout << "snake id: " << _id << " is moving" << std::endl;
-
+	if (this->_nextDir != None)
+		this->setDir(this->_nextDir);
 	switch (this->_dir)
 	{
 		case Top:

@@ -14,7 +14,7 @@ NAME = libsfml.dylib
 
 SRCDIR = ./
 
-CFILES = Sfml.class.cpp
+CFILES = Glib.class.cpp
 
 SRC = $(patsubst %, $(SRCDIR)%, $(CFILES))
 
@@ -22,7 +22,7 @@ OBJ = $(SRC:.cpp=.o)
 
 INCLUDEDIR = .
 
-HEADERS = Sfml.class.hpp
+HEADERS = Glib.class.hpp ../../main/includes/IGlib.class.hpp
 
 # COMPILATION
 ERRORFLAGS = # -Wall -Werror -Wextra

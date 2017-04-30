@@ -115,7 +115,6 @@ int		main(int ac, char **av)
 		fputs (dlerror(), stderr);
 		exit(1);
 	}
-
 	Engine	engine(opts.width, opts.height, opts.players, handle, opts.difficulty);
 	dlclose(handle);
 	return (0);

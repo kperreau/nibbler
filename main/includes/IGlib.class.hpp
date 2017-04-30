@@ -1,22 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Sfml.class.hpp                                     :+:      :+:    :+:   */
+/*   Engine.class.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 17:42:15 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/04/21 15:56:02 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SFML_CLASS_HPP
-# define SFML_CLASS_HPP
+#ifndef IGLIB_CLASS_HPP
+# define IGLIB_CLASS_HPP
 # include <iostream>
 # include <string>
-# include <ctime>
-# include <sstream>
-# include <SFML/Graphics.hpp>
 
 enum	instruct {
 	Ins_None,
@@ -33,6 +30,7 @@ enum	input {
 	Right,
 	Top,
 	Bottom,
+	Exit,
 };
 
 typedef struct	data
@@ -46,26 +44,17 @@ typedef struct	data
 	int			square = 0;
 }				s_data;
 
-class Sfml
+class IGlib
 {
 	public:
-		Sfml(int width, int height);
-		Sfml(Sfml const & src);
-		~Sfml(void);
-		Sfml &	operator=(Sfml const & rhd);
-		sf::RenderWindow &		getWindow(void);
-		void					display(void);
-		void					clear(void);
-		void					draw(s_data * data);
-		void					getInput(s_data *data);
-		int						getColor(int color, int type);
-
-	private:
-		int							_width;
-		int							_height;
-		sf::RenderWindow			_window;
+		virtual ~IGlib(void) {};
+		//virtual IGlib &					operator=(IGlib const & rhd);
+		virtual void					init(int width, int height, int square) = 0;
+		virtual void					display(void) = 0;
+		virtual void					clear(void) = 0;
+		virtual void					draw(int x, int y, int color) = 0;
+		virtual input					getInput(int id) = 0;
+		virtual int						getColor(int color, int type) = 0;
 };
-
-//std::ostream &		operator<<(std::ostream & o, Sfml const & i);
 
 #endif

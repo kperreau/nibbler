@@ -18,7 +18,9 @@
 # include <sstream>
 # include <cstdint>
 # include <utility>
+# include "IGlib.class.hpp"
 
+/*
 enum	input {
 	None,
 	Left,
@@ -26,6 +28,7 @@ enum	input {
 	Top,
 	Bottom,
 };
+*/
 
 class Snake
 {
@@ -39,6 +42,7 @@ class Snake
 		void				set_isAlive(char val);
 		char				get_isAlive(void) const;
 		input				getDir(void) const;
+		void				setNextDir(input val);
 		void				setDir(input val);
 		int					getID(void) const;
 		int					getColor(void) const;
@@ -49,6 +53,7 @@ class Snake
 		uint32_t			_len;
 		char				_isAlive;
 		input				_dir;
+		input				_nextDir;
 		const int			_id;
 		uint32_t			_speed;
 		int					_color;
