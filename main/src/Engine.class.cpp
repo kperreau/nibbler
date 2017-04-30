@@ -21,8 +21,8 @@ Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t dif
 		return ;
 	}
 	
-	if (width < (SQUARE + 2) * 4 * nb_players
-		|| height < (SQUARE + 2) * 4 * nb_players)
+	if (width < (SQUARE + 50) * 2 * nb_players
+		|| height < (SQUARE + 50) * 2 * nb_players)
 	{
 		std::cerr << "Window size too small" << std::endl;
 		return ;
@@ -39,8 +39,8 @@ Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t dif
 		this->_listPlayers.push_back(
 			new Snake(
 				std::pair <int, int>(
-					  this->_width / SQUARE / 2  - (nb_players * 2) + i * 2
-					, this->_height / SQUARE / 2
+					  this->_width / SQUARE / 2  - ((nb_players - 1) * 2) + i * 2
+					, this->_height / SQUARE / 2 - 2
 					)
 				, this->_color[i]
 				)
@@ -271,8 +271,6 @@ void					Engine::checkPlayers(void)
 
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{
-		//if (this->_data.in[(*it)->getID()] != None)
-		//	(*it)->setDir(this->_data.in[(*it)->getID()]);
 		(*it)->move();
 		collision = this->checkCollision(**it);
 		if (collision == 1)
@@ -287,9 +285,7 @@ void					Engine::checkPlayers(void)
 			(*it)->eat();
 			++this->_score;
 			if (this->_difficulty > 1 && this->_speed > 50)
-			{
 				this->_speed -= 2;
-			}
 		}
 	}
 	return ;
