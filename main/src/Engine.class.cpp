@@ -183,8 +183,6 @@ void					Engine::drawPlayers(void)
 			color = (*it)->getColor();
 			if (it2 == elem.begin())
 				color /= 2;
-			this->_data.x = std::get<0>(*it2);
-			this->_data.y = std::get<1>(*it2);
 			this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color);		// Draw snakes
 		}
 	}
@@ -240,7 +238,7 @@ void					Engine::run(void)
 
 	while (1)
 	{
-		this->_glib->clear();
+		//this->_glib->clear();
 		this->getInputs();
 		this->drawPlayers();
 		this->drawFoods();

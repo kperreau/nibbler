@@ -63,6 +63,7 @@ void			Glib::display(void)
 				this->_window.close();
 		}
 		this->_window.display();
+		this->_window.clear();
 	}
 	return ;
 }

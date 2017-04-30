@@ -29,34 +29,12 @@
 
 typedef std::chrono::high_resolution_clock Clock;
 
-/*enum	instruct {
-	Ins_None,
-	Ins_Create,
-	Ins_Clear,
-	Ins_Display,
-	Ins_Draw,
-	Ins_Input
-};
-*/
-
 enum	cell {
 	CELL_DEFAULT,
 	CELL_SNAKE,
 	CELL_FOOD,
 	CELL_ROCK
 };
-
-/*typedef struct	data
-{
-	input		in[4] = {None};
-	int			x = 0;
-	int			y = 0;
-	int			playerID = 0;
-	int			head = 0;
-	int			color[4] = {0};
-	int			square = SQUARE;
-}				s_data;
-*/
 
 class Engine
 {
@@ -96,7 +74,6 @@ class Engine
 		uint32_t					_difficulty;
 		long						_rate;
 		void *						_handle;
-		s_data						_data;
 		IGlib *						_glib;
 		int const					_color[4] = {0xff, 0xff00, 0xff0000};
 		std::list <Snake *>			_listPlayers;

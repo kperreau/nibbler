@@ -15,15 +15,6 @@
 # include <iostream>
 # include <string>
 
-enum	instruct {
-	Ins_None,
-	Ins_Create,
-	Ins_Clear,
-	Ins_Display,
-	Ins_Draw,
-	Ins_Input
-};
-
 enum	input {
 	None,
 	Left,
@@ -32,17 +23,6 @@ enum	input {
 	Bottom,
 	Exit,
 };
-
-typedef struct	data
-{
-	input		in[4] = {None};
-	int			x = 0;
-	int			y = 0;
-	int			playerID = 0;
-	int			head = 0;
-	int			color[4] = {0};
-	int			square = 0;
-}				s_data;
 
 class IGlib
 {
