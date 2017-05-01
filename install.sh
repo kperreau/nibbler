@@ -14,5 +14,5 @@ else
 	cd $PWD
 	echo "\033[32;1m[SFML: Done]\033[0m"
 fi
-export LD_LIBRARY_PATH="/tmp/npuzzle_glib/sfml"
-echo "\033[33;1mType:\033[0m LD_LIBRARY_PATH=\"$PWD/glib/sfml/lib\""
+export LD_LIBRARY_PATH="$PWD/glib/sfml/lib"
+echo "\033[33;1mType:\033[0m export LD_LIBRARY_PATH=\"$PWD/glib/sfml/lib\""

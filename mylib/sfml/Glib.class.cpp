@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 17:48:31 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/01 15:24:58 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ Glib::Glib()
 	this->_input[0][sf::Keyboard::Down] = Bottom;
 	this->_input[0][sf::Keyboard::Left] = Left;
 	this->_input[0][sf::Keyboard::Right] = Right;
-	this->_input[1][sf::Keyboard::Z] = Top;
+	this->_input[1][sf::Keyboard::W] = Top;
 	this->_input[1][sf::Keyboard::S] = Bottom;
-	this->_input[1][sf::Keyboard::Q] = Left;
+	this->_input[1][sf::Keyboard::A] = Left;
 	this->_input[1][sf::Keyboard::D] = Right;
 	this->_input[4][sf::Keyboard::Escape] = Exit;
 	return ;

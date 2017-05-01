@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/01 16:02:16 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/01 16:18:42 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ void					Engine::fillMap(void)
 	// fill snake cells
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{
+		if ((*it)->get_isAlive() == 0)
+			continue ;
 		auto elem = (*it)->get_elems();
 		for (auto it2 = elem.begin(); it2 != elem.end(); ++it2)
 		{
@@ -272,8 +274,8 @@ void					Engine::checkPlayers(void)
 		{
 			--this->_nbPlayersAlive;
 			(*it)->set_isAlive(0);
-			delete *it;
-			it = this->_listPlayers.erase(it);
+			//delete *it;
+			//it = this->_listPlayers.erase(it);
 		}
 		else if (collision == 2)
 		{
@@ -284,6 +286,15 @@ void					Engine::checkPlayers(void)
 		}
 		this->resetMap();
 		this->fillMap();
+	}
+	
+	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
+	{
+		if ((*it)->get_isAlive() == 0)
+		{
+			delete *it;
+			it = this->_listPlayers.erase(it);
+		}
 	}
 	return ;
 }
