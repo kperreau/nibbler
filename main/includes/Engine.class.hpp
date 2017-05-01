@@ -14,6 +14,7 @@
 # define ENGINE_CLASS_HPP
 # include <iostream>
 # include <string>
+# include <algorithm>
 # include <ctime>
 # include <vector>
 # include <sstream>

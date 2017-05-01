@@ -330,14 +330,12 @@ int						Engine::checkCollision(int x, int y)
 
 	if (this->_map->at(coord) == CELL_FOOD)
 	{
-		for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
+		std::pair <int, int>	head(x, y);
+		auto it = std::find(this->_listFoods.begin(), this->_listFoods.end(), head);
+		if (it != this->_listFoods.end())
 		{
-			if (std::get<0>(*it) == x
-				&& std::get<1>(*it) == y)
-			{
-				it = this->_listFoods.erase(it);
-				return (2);
-			}
+			this->_listFoods.erase(it);
+			return (2);
 		}
 	}
 	return (0);
