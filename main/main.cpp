@@ -39,7 +39,6 @@ void		put_error(std::string error)
 void		usage(char *name)
 {
 	std::cout << "usage: " << name << " [xyph]" << std::endl;
-	//std::cout << "'-v' for a verbose output" << std::endl;
 	std::cout << "'-d' for difficulty. 1 - Normal, 2 - Medium, 3 - Hard" << std::endl;
 	std::cout << "'-x size' to set width of window" << std::endl;
 	std::cout << "'-y size' to set height of window" << std::endl;
@@ -76,6 +75,8 @@ t_opts		options(int ac, char **av)
 				opts.difficulty = atoi(optarg);
 				break;
 			case 'p':
+				if (!regex_match(optarg, regex_pattern))
+					put_error("Wrong players number");
 				opts.players = atoi(optarg);
 				break;
 			case 'v':
@@ -95,6 +96,8 @@ t_opts		options(int ac, char **av)
 		put_error("Please type positives values for window format");
 	if (opts.difficulty < 1 || opts.difficulty > 3)
 		put_error("Wrong value for difficulty");
+	if (opts.players < 1 || opts.players > 4)
+		put_error("Wrong players number");
 	return (opts);
 }
 

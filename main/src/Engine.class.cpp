@@ -264,28 +264,28 @@ void					Engine::run(void)
 
 void					Engine::checkPlayers(void)
 {
-	int		collision = 0;
+	int						collision = 0;
+	std::pair <int, int>	head;
 
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{
-		(*it)->move();
-		collision = this->checkCollision(**it);
+		head = (*it)->next_move();
+		collision = this->checkCollision(std::get<0>(head), std::get<1>(head));
 		if (collision == 1)
 		{
 			--this->_nbPlayersAlive;
 			(*it)->set_isAlive(0);
-			//delete *it;
-			//it = this->_listPlayers.erase(it);
 		}
 		else if (collision == 2)
 		{
+			(*it)->move();
 			(*it)->eat();
 			++this->_score;
 			if (this->_difficulty > 1 && this->_speed > 50)
 				this->_speed -= 2;
 		}
-		this->resetMap();
-		this->fillMap();
+		else
+			(*it)->move();
 	}
 	
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
@@ -299,17 +299,14 @@ void					Engine::checkPlayers(void)
 	return ;
 }
 
-int						Engine::checkCollision(Snake const & snake)
+int						Engine::checkCollision(int x, int y)
 {
-	std::pair <int, int>	head = snake.get_elems().front();
-
-	if (std::get<0>(head) >= this->get_game_width()
-		|| std::get<1>(head) >= this->get_game_height()
-		|| std::get<0>(head) < 0 || std::get<1>(head) < 0)
+	if (x >= this->get_game_width()
+		|| y >= this->get_game_height()
+		|| x < 0 || y < 0)
 		return (1);
-	
 
-	int coord = std::get<1>(head) * this->get_game_width() + std::get<0>(head);
+	int coord = y * this->get_game_width() + x;
 
 	if (this->_map->at(coord) == CELL_SNAKE
 		|| this->_map->at(coord) == CELL_ROCK)
@@ -319,8 +316,8 @@ int						Engine::checkCollision(Snake const & snake)
 	{
 		for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
 		{
-			if (std::get<0>(*it) == std::get<0>(head)
-				&& std::get<1>(*it) == std::get<1>(head))
+			if (std::get<0>(*it) == x
+				&& std::get<1>(*it) == y)
 			{
 				it = this->_listFoods.erase(it);
 				return (2);

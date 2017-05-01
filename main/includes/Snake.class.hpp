@@ -20,33 +20,25 @@
 # include <utility>
 # include "IGlib.class.hpp"
 
-/*
-enum	input {
-	None,
-	Left,
-	Right,
-	Top,
-	Bottom,
-};
-*/
-
 class Snake
 {
 	public:
 		Snake(std::pair <int, int> const & start, int const color);
 		Snake(Snake const & src);
 		~Snake(void);
-		Snake &				operator=(Snake const & rhs);
-		uint32_t			get_len(void) const;
-		void				move(void);
-		void				set_isAlive(char val);
-		char				get_isAlive(void) const;
-		input				getDir(void) const;
-		void				setNextDir(input val);
-		void				setDir(input val);
-		int					getID(void) const;
-		int					getColor(void) const;
-		void				eat(void);
+		Snake &					operator=(Snake const & rhs);
+		uint32_t				get_len(void) const;
+		void					move(void);
+		void					set_isAlive(char val);
+		char					get_isAlive(void) const;
+		input					getDir(void) const;
+		void					setNextDir(input val);
+		void					setDir(input val);
+		int						getID(void) const;
+		int						getColor(void) const;
+		void					eat(void);
+		std::pair <int, int>	next_move(void);
+		int						checkDir(input val);
 		std::list <std::pair <int, int> > const &	get_elems(void) const;
 
 	private:

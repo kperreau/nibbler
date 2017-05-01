@@ -53,7 +53,7 @@ class Engine
 		void					checkPlayers(void);
 		void					setRate(void);
 		long					getRate(void) const;
-		int						checkCollision(Snake const & snake);
+		int						checkCollision(int x, int y);
 		void					drawPlayers(void);
 		void					drawFoods(void);
 		void					drawRocks(void);

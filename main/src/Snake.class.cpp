@@ -19,9 +19,7 @@ Snake::Snake(std::pair <int, int> const & start, int const color)
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 1));
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 2));
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 3));
-	std::cout << "snake id: " << _id << " is new" << std::endl;
-	// std::cout << "x: " << std::get<0>(start) << std::endl;
-	// std::cout << "y: " << std::get<1>(start) << std::endl;
+	//std::cout << "snake id: " << _id << " is new" << std::endl;
 	return ;
 }
 
@@ -33,7 +31,7 @@ Snake::Snake(Snake const & src) : _id(_nextID++)
 
 Snake::~Snake(void)
 {
-	std::cout << "snake id: " << _id << " is dead" << std::endl;
+	//std::cout << "snake id: " << _id << " is dead" << std::endl;
 	return ;
 }
 
@@ -42,14 +40,20 @@ uint32_t		Snake::get_len(void) const
 	return (this->_len);
 }
 
-void		Snake::setDir(input val)
+int		Snake::checkDir(input val)
 {
 	if ((val == Top && this->_dir == Bottom)
 		|| (val == Bottom && this->_dir == Top)
 		|| (val == Left && this->_dir == Right)
 		|| (val == Right && this->_dir == Left))
-		return ;
-	this->_dir = val;
+		return (0);
+	return (1);
+}
+
+void		Snake::setDir(input val)
+{
+	if (this->checkDir(val) == 1)
+		this->_dir = val;
 	return ;
 }
 
@@ -86,13 +90,15 @@ input		Snake::getDir(void) const
 	return (this->_dir);
 }
 
-void			Snake::move(void)
+std::pair <int, int>	Snake::next_move(void)
 {
-	std::pair <int, int> head;
+	std::pair <int, int>	head;
+	input					nextDir = this->_dir;
 
-	if (this->_nextDir != None)
-		this->setDir(this->_nextDir);
-	switch (this->_dir)
+	if (this->_nextDir != None
+		&& this->checkDir(this->_nextDir) == 1)
+		nextDir = this->_nextDir;
+	switch (nextDir)
 	{
 		case Top:
 			std::get<0>(head) = std::get<0>(this->_elems.front());
@@ -114,7 +120,18 @@ void			Snake::move(void)
 			std::get<0>(head) = std::get<0>(this->_elems.front());
 			std::get<1>(head) = std::get<1>(this->_elems.front()) - 1;
 	}
-	
+	return (head);
+}
+
+void			Snake::move(void)
+{
+	std::pair <int, int> head;
+
+
+	head = this->next_move();
+	if (this->_nextDir != None)
+		this->setDir(this->_nextDir);
+
 	this->_last = this->_elems.back();
 	this->_elems.pop_back();
 	this->_elems.push_front(head);
