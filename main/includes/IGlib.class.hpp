@@ -22,6 +22,7 @@ enum	input {
 	Top,
 	Bottom,
 	Exit,
+	Pause,
 };
 
 class IGlib

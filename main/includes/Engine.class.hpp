@@ -61,7 +61,7 @@ class Engine
 		void					resetMap(void);
 		void					genFoods(void);
 		void					genRocks(void);
-		void					getInputs(void) const;
+		void					getInputs(void);
 		Engine &				operator=(Engine const & rhs);
 
 	private:
@@ -75,6 +75,7 @@ class Engine
 		long						_rate;
 		void *						_handle;
 		IGlib *						_glib;
+		bool						_pause;
 		int const					_color[4] = {0xff, 0xff00, 0xff0000};
 		std::list <Snake *>			_listPlayers;
 		std::vector <cell> *		_map;

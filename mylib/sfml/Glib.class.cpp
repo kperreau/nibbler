@@ -24,6 +24,7 @@ Glib::Glib()
 	this->_input[1][sf::Keyboard::Q] = Left;
 	this->_input[1][sf::Keyboard::D] = Right;
 	this->_input[4][sf::Keyboard::Escape] = Exit;
+	this->_input[4][sf::Keyboard::Space] = Pause;
 	return ;
 }
 

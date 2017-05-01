@@ -13,7 +13,7 @@
 #include "Engine.class.hpp"
 
 Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t difficulty)
-: _speed(150), _score(0), _difficulty(difficulty), _rate(0) , _handle(handle)
+: _speed(150), _score(0), _difficulty(difficulty), _rate(0), _handle(handle), _pause(false)
 {
 	if (nb_players < 1 && nb_players > 4)
 	{
@@ -208,10 +208,26 @@ void					Engine::drawRocks(void)
 	return ;
 }
 
-void					Engine::getInputs(void) const
+void					Engine::getInputs(void)
 {
+	auto	time = Clock::now();
+	static auto	oldtime = Clock::now();
+	long	duration = 0;
+
 	if (this->_glib->getInput(4) == Exit)
 		exit (0);
+
+	duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
+	if (duration > this->_speed * 1000000)
+	{
+		if (this->_glib->getInput(4) == Pause)
+		{
+			oldtime = Clock::now();
+			this->_pause = !this->_pause;
+		}
+	}
+	if (this->_pause)
+		return ;
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 		(*it)->setNextDir(this->_glib->getInput((*it)->getID()));
 	return ;
@@ -245,7 +261,7 @@ void					Engine::run(void)
 		this->_glib->display();
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
-		if (duration < this->_speed * 1000000)
+		if (duration < this->_speed * 1000000 || this->_pause)
 			continue ;
 		oldtime = Clock::now();
 		this->checkPlayers();
