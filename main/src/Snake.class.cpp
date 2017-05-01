@@ -6,14 +6,14 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 17:46:29 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/01 15:46:09 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Snake.class.hpp"
 
 Snake::Snake(std::pair <int, int> const & start, int const color)
-: _len(4), _isAlive(1), _dir(Top), _id(_nextID++), _color(color), _nextDir(None)
+: _len(4), _isAlive(1), _dir(Top), _nextDir(None), _id(_nextID++), _color(color)
 {
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start)));
 	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 1));

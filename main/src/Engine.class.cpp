@@ -6,14 +6,14 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 17:51:42 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/01 16:02:16 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Engine.class.hpp"
 
 Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t difficulty)
-: _speed(150), _score(0), _rate(0), _handle(handle), _difficulty(difficulty)
+: _speed(150), _score(0), _difficulty(difficulty), _rate(0) , _handle(handle)
 {
 	if (nb_players < 1 && nb_players > 4)
 	{
@@ -123,8 +123,6 @@ void					Engine::resetMap(void)
 
 void					Engine::fillMap(void)
 {
-	int		coord;
-
 	this->_emptyCells.clear();
 
 	// fill snake cells
@@ -224,7 +222,6 @@ void					Engine::run(void)
 	long	duration = 0;
 	IGlib *	(*func_lib)();
 	char *	error;
-	input	in = None;
 
 	*(void**)&(func_lib) = dlsym(this->_handle, "getGlib");
 	if ((error = dlerror()) != NULL)
@@ -285,6 +282,8 @@ void					Engine::checkPlayers(void)
 			if (this->_difficulty > 1 && this->_speed > 50)
 				this->_speed -= 2;
 		}
+		this->resetMap();
+		this->fillMap();
 	}
 	return ;
 }
@@ -292,8 +291,6 @@ void					Engine::checkPlayers(void)
 int						Engine::checkCollision(Snake const & snake)
 {
 	std::pair <int, int>	head = snake.get_elems().front();
-	int						x = 0;
-	int						y = 0;
 
 	if (std::get<0>(head) >= this->get_game_width()
 		|| std::get<1>(head) >= this->get_game_height()
