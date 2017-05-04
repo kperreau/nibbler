@@ -40,6 +40,7 @@ class Glib : public IGlib
 		int							_height;
 		int							_square;
 		SDL_Window*					_window;
+		SDL_Renderer*				_renderer;
 		std::map<int, std::map<int, input> >		_input;
 };
 

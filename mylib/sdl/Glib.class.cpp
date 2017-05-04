@@ -50,7 +50,7 @@ void			Glib::init(int width, int height, int square)
 	
     // Initialisation de la SDL
 	
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -61,7 +61,7 @@ void			Glib::init(int width, int height, int square)
     // Création de la fenêtre
 	
     this->_window = SDL_CreateWindow("Nibbler", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-	
+    this->_renderer =  SDL_CreateRenderer( this->_window, -1, SDL_RENDERER_ACCELERATED);
 	return ;
 }
 
@@ -72,24 +72,26 @@ SDL_Window*		Glib::getWindow(void)
 
 void			Glib::display(void)
 {
-	/*if (this->_window.isOpen())
+	if (1)
 	{
-		sf::Event event;
-		while (this->_window.pollEvent(event))
+		SDL_Event evenements;
+		/*while (SDL_PollEvent(&evenements) == 1)
 		{
-			if (event.type == sf::Event::Closed)
-				this->_window.close();
-		}
-		this->_window.display();
-		this->_window.clear();
-	}*/
+			if (evenements.type == SDL_QUIT) {
+				SDL_DestroyWindow(this->_window);
+    			SDL_Quit();
+			}
+		}*/
+		SDL_RenderPresent(this->_renderer);
+		SDL_SetRenderDrawColor( this->_renderer, 0, 0, 0, 0 );
+		SDL_RenderClear( this->_renderer );
+	}
 	return ;
 }
 
 void			Glib::clear(void)
 {
-	/*if (this->_window.isOpen())
-		this->_window.clear();*/
+	SDL_RenderClear( this->_renderer );
 	return ;
 }
 
@@ -100,27 +102,19 @@ int			Glib::getColor(int color, int type)
 
 void			Glib::draw(int x, int y, int color)
 {
-	/*if (this->_window.isOpen())
-	{
-		sf::RectangleShape rectangle(sf::Vector2f(this->_square, this->_square));
-		rectangle.setFillColor(
-			sf::Color(
-				  this->getColor(color, 0)
-				, this->getColor(color, 1)
-				, this->getColor(color, 2)
-				)
-			);
-		rectangle.setOutlineThickness(1);
-		rectangle.setOutlineColor(
-			sf::Color(
-				  0xff
-				, 0xff
-				, 0xff
-				)
-			);
-		rectangle.setPosition(x * this->_square, y * this->_square);
-		this->_window.draw(rectangle);
-	}*/
+	SDL_Rect r;
+    r.x = x * this->_square;
+    r.y = y * this->_square;
+    r.w = this->_square;
+    r.h = this->_square;
+    SDL_SetRenderDrawColor( this->_renderer, this->getColor(color, 0), this->getColor(color, 1), this->getColor(color, 2), 0 );
+	SDL_RenderFillRect( this->_renderer, &r );
+    r.x = x * this->_square-1;
+    r.y = y * this->_square-1;
+    r.w = this->_square+2;
+    r.h = this->_square+2;
+    SDL_SetRenderDrawColor(this->_renderer, 0xff, 0xff, 0xff, 0);
+    SDL_RenderDrawRect( this->_renderer, &r );
 	return ;
 }
 

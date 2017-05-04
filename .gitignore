@@ -1,1 +1,6 @@
 glib
+~*
+.DS_Store
+*.o
+.*
+.dylib
