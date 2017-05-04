@@ -8,7 +8,7 @@ else
 	git clone https://github.com/SFML/SFML/ glib/sfml
 	echo "\033[33m[SFML: install]\c"
 	cd glib/sfml
-	cmake .
+	cmake -DFREETYPE_INCLUDE_DIR_ft2build:PATH=$C_PATH/glib/sfml/extlibs/headers .
 	make sfml-graphics
 	cp -r $C_PATH/glib/sfml/extlibs/libs-osx/Frameworks/ ~/Library/.
 	echo "\r\033[32;1m[SFML: install Complete]"
