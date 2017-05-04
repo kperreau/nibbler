@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 17:42:15 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/04 17:10:28 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 # include <string>
 # include <ctime>
 # include <sstream>
+# include <map>
 # include <../../main/includes/IGlib.class.hpp>
-# include <SDL2/SDL.h>
+# include <SDL.h>
 
 class Glib : public IGlib
 {

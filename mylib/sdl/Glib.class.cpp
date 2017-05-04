@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/01 15:24:58 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/04 17:12:54 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,18 +127,17 @@ void			Glib::draw(int x, int y, int color)
 input			Glib::getInput(int id)
 {
 	// Structure
-
 	SDL_Event evenements;
 
 
 	// Récupération d'un évènement
-
-	while(SDL_PollEvent(&evenements) == 1) {
-
-		if (evenements.type == SDL_KEYDOWN) {
+	while (SDL_PollEvent(&evenements) == 1)
+	{
+		if (evenements.type == SDL_KEYDOWN)
+		{
 			for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
 			{
-				if (evenements.key.keysym.scancode == sit->first)
+				if (evenements.key.keysym.scancode == it->first)
 					return (it->second);
 			}
 		}

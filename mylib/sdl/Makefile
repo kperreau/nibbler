@@ -6,11 +6,11 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2017/04/20 19:51:47 by kperreau         ###   ########.fr        #
+#    Updated: 2017/05/04 17:32:27 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libsfml.dylib
+NAME = libsdl.dylib
 
 SRCDIR = ./
 
@@ -29,7 +29,7 @@ ERRORFLAGS = # -Wall -Werror -Wextra
 
 INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/sdl/include/
 
-LIBFLAGS = -I/Library/Frameworks/SDL2.framework/Headers -framework SDL2
+LIBFLAGS = -L../../glib/sdl/lib/ -lSDL2
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) -std=c++11 -O2
 
