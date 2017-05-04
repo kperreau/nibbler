@@ -6,16 +6,19 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2017/05/04 18:05:16 by kperreau         ###   ########.fr        #
+#    Updated: 2017/05/04 19:43:17 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-all: core sfml
+all: core sfml sdl
 
 core:
 	make -C main/
 
 sfml:
 	make -C mylib/sfml/
+
+sdl:
+	make -C mylib/sdl/
 
 re: fclean all
 
