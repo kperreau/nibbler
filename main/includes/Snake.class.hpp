@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:32 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 17:42:33 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/05 21:27:57 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 # include <cstdint>
 # include <utility>
 # include "IGlib.class.hpp"
+# include "Map.class.hpp"
 
 class Snake
 {
 	public:
-		Snake(std::pair <int, int> const & start, int const color);
+		Snake(std::pair <int, int> start, int const color, Map & map);
 		Snake(Snake const & src);
 		~Snake(void);
 		Snake &					operator=(Snake const & rhs);
@@ -38,8 +39,11 @@ class Snake
 		int						getColor(void) const;
 		void					eat(void);
 		std::pair <int, int>	next_move(void);
+		std::pair <int, int>	addElem(int x, int y);
 		int						checkDir(input val);
 		std::list <std::pair <int, int> > const &	get_elems(void) const;
+
+		Map &				map;
 
 	private:
 		uint32_t			_len;

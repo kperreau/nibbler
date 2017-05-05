@@ -6,24 +6,26 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/01 15:46:09 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/05 21:39:52 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Snake.class.hpp"
 
-Snake::Snake(std::pair <int, int> const & start, int const color)
-: _len(4), _isAlive(1), _dir(Top), _nextDir(None), _id(_nextID++), _color(color)
+Snake::Snake(std::pair <int, int> start, int const color, Map & map)
+: map(map), _len(4), _isAlive(1), _dir(Top), _nextDir(None), _id(_nextID++), _color(color)
 {
-	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start)));
-	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 1));
-	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 2));
-	this->_elems.push_back(std::pair <int, int>(std::get<0>(start), std::get<1>(start) + 3));
-	//std::cout << "snake id: " << _id << " is new" << std::endl;
+	this->_elems.push_back(this->addElem(std::get<0>(start), std::get<1>(start)));
+	++std::get<1>(start);
+	this->_elems.push_back(this->addElem(std::get<0>(start), std::get<1>(start)));
+	++std::get<1>(start);
+	this->_elems.push_back(this->addElem(std::get<0>(start), std::get<1>(start)));
+	++std::get<1>(start);
+	this->_elems.push_back(this->addElem(std::get<0>(start), std::get<1>(start)));
 	return ;
 }
 
-Snake::Snake(Snake const & src) : _id(_nextID++)
+Snake::Snake(Snake const & src) : map(src.map), _id(_nextID++)
 {
 	*this = src;
 	return ;
@@ -31,8 +33,20 @@ Snake::Snake(Snake const & src) : _id(_nextID++)
 
 Snake::~Snake(void)
 {
-	//std::cout << "snake id: " << _id << " is dead" << std::endl;
+	for (auto it = this->_elems.begin(); it != this->_elems.end(); ++it)
+	{
+		this->map.setCell(std::get<0>(*it), std::get<1>(*it), CELL_DEFAULT);
+		this->map.getEmptyCells().push_back(*it);
+	}
 	return ;
+}
+
+std::pair <int, int>	Snake::addElem(int x, int y)
+{
+	std::pair <int, int>	elem(x, y);
+	this->map.delEmptyCell(elem);
+	this->map.setCell(x, y, CELL_SNAKE);
+	return (elem);
 }
 
 uint32_t		Snake::get_len(void) const
@@ -129,10 +143,15 @@ void			Snake::move(void)
 
 
 	head = this->next_move();
+	
 	if (this->_nextDir != None)
 		this->setDir(this->_nextDir);
 
 	this->_last = this->_elems.back();
+	this->map.delEmptyCell(head);
+	this->map.getEmptyCells().push_back(this->_last);
+	this->map.setCell(std::get<0>(head), std::get<1>(head), CELL_SNAKE);
+	this->map.setCell(std::get<0>(this->_last), std::get<1>(this->_last), CELL_DEFAULT);
 	this->_elems.pop_back();
 	this->_elems.push_front(head);
 	return ;
@@ -140,6 +159,8 @@ void			Snake::move(void)
 
 void			Snake::eat(void)
 {
+	this->map.setCell(std::get<0>(this->_last), std::get<1>(this->_last), CELL_SNAKE);
+	this->map.delEmptyCell(this->_last);
 	this->_elems.push_back(this->_last);
 	return ;
 }
@@ -149,13 +170,14 @@ std::list <std::pair <int, int> > const &		Snake::get_elems(void) const
 	return (this->_elems);
 }
 
-
 Snake &			Snake::operator=(Snake const & rhs)
 {
 	this->_len = rhs.get_len();
 	this->_isAlive = rhs.get_isAlive();
 	this->_elems = rhs.get_elems();
 	this->_dir = Top;
+	this->map = rhs.map;
+	//this->_nextDir = Top;
 	return (*this);
 }
 

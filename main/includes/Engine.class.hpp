@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 15:56:02 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/05 21:40:08 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,11 @@
 # include <dlfcn.h>
 # include "Snake.class.hpp"
 # include "IGlib.class.hpp"
+# include "Map.class.hpp"
 
 # define SQUARE 16
 
 typedef std::chrono::high_resolution_clock Clock;
-
-enum	cell {
-	CELL_DEFAULT,
-	CELL_SNAKE,
-	CELL_FOOD,
-	CELL_ROCK
-};
 
 class Engine
 {
@@ -58,11 +52,11 @@ class Engine
 		void					drawPlayers(void);
 		void					drawFoods(void);
 		void					drawRocks(void);
-		void					fillMap(void);
 		void					resetMap(void);
 		void					genFoods(void);
 		void					genRocks(void);
 		void					getInputs(void);
+		int						load_lib(int lib);
 		Engine &				operator=(Engine const & rhs);
 
 	private:
@@ -71,7 +65,7 @@ class Engine
 		int							_height;
 		int							_width;
 		uint32_t					_speed;
-		uint32_t					_score;
+		int							_score;
 		uint32_t					_difficulty;
 		long						_rate;
 		void *						_handle;
@@ -79,9 +73,8 @@ class Engine
 		bool						_pause;
 		int const					_color[4] = {0xff, 0xff00, 0xff0000};
 		std::list <Snake *>			_listPlayers;
-		std::vector <cell> *		_map;
+		Map							_map;
 		std::list <std::pair <int, int> >		_listFoods;
-		std::list <std::pair <int, int> >		_emptyCells;
 		std::list <std::pair <int, int> >		_listRocks;
 };
 

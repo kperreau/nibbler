@@ -6,7 +6,7 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2017/04/16 19:35:17 by kperreau         ###   ########.fr        #
+#    Updated: 2017/05/05 15:22:16 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,13 @@ INCLUDESDIR = ./includes
 
 MAIN = main.cpp
 
-CFILES = Engine.class.cpp Snake.class.cpp
+CFILES = Engine.class.cpp Snake.class.cpp Map.class.cpp
 
 SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
 
 OBJ = $(SRC:.cpp=.o) $(MAIN:.cpp=.o)
 
-HFILES = Engine.class.hpp Snake.class.hpp IGlib.class.hpp
+HFILES = Engine.class.hpp Snake.class.hpp IGlib.class.hpp Map.class.hpp
 
 HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 

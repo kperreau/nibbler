@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 19:16:21 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/04 17:28:15 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/05 20:06:40 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ int		main(int ac, char **av)
 	}
 	opts = options(ac, av);
 
-	//handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
-	handle = dlopen("../mylib/sdl/libsdl.dylib", RTLD_NOW|RTLD_GLOBAL);
+	handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
+	//handle = dlopen("../mylib/sdl/libsdl.dylib", RTLD_NOW|RTLD_GLOBAL);
 	if (!handle)
 	{
 		fputs (dlerror(), stderr);

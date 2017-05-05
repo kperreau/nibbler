@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/01 16:18:42 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/05 22:10:39 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,26 @@ Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t dif
 	this->_nbPlayersAlive = nb_players;
 	this->_width = width - (width % SQUARE);
 	this->_height = height - (height % SQUARE);
-
+	
+	// init map
+	this->_map = Map(this->get_game_width(), this->get_game_height());
+	
 	// init players
 	for (int i = 0; i < nb_players; ++i)
 	{
 		this->_listPlayers.push_back(
 			new Snake(
 				std::pair <int, int>(
-					  this->_width / SQUARE / 2  - ((nb_players - 1) * 2) + i * 2
+					  this->_width / SQUARE / 2  - ((nb_players - 1) * 2) + i * 3
 					, this->_height / SQUARE / 2 - 2
 					)
 				, this->_color[i]
+				, this->_map
 				)
 			);
 	}
-	this->_map = new std::vector <cell>(
-		  this->get_game_width() * this->get_game_height()
-		, CELL_DEFAULT
-		);
-	this->fillMap();
+
+	this->load_lib(0);
 	this->genFoods();
 	this->run();		// run the game
 	return ;
@@ -65,30 +66,31 @@ Engine::Engine(Engine const & src)
 Engine::~Engine(void)
 {
 	if (!this->_listPlayers.empty())
-		delete this->_map;
-	if (!this->_listPlayers.empty())
 		this->_listPlayers.clear();
 	return ;
 }
 
 void					Engine::genFoods(void)
 {
+	std::srand(time(NULL));
+
 	if (this->_nbPlayersAlive < 1
-		|| this->_listFoods.size() > this->_nbPlayersAlive)
+		|| static_cast<int>(this->_listFoods.size()) > this->_nbPlayersAlive)
 		return ;
 	
-	for (int i = 0; i < this->_nbPlayersAlive - this->_listFoods.size(); ++i)
+	for (int i = 0; i < this->_nbPlayersAlive - static_cast<int>(this->_listFoods.size()); ++i)
 	{
-		uint32_t	n = std::rand() % this->_emptyCells.size();
-		auto		it = this->_emptyCells.begin();
+		if (this->_map.getEmptyCells().size() < 1)
+			return ;
+
+		uint32_t	n = std::rand() % this->_map.getEmptyCells().size();
+		auto		it = this->_map.getEmptyCells().begin();
+
 		std::advance(it, n);
 
-		this->_map->at(
-			std::get<1>(*it) * this->get_game_width() + std::get<0>(*it)
-			) = CELL_FOOD;
-
+		this->_map.setCell(std::get<0>(*it), std::get<1>(*it), CELL_FOOD);
 		this->_listFoods.push_back(std::pair <int, int>(std::get<0>(*it), std::get<1>(*it)));
-		this->_emptyCells.erase(it);
+		this->_map.getEmptyCells().erase(it);
 	}
 	return ;
 }
@@ -98,75 +100,15 @@ void					Engine::genRocks(void)
 	if (this->_difficulty < 3)
 		return ;
 	
-	for (int i = 0; i < this->_score - this->_listRocks.size(); ++i)
+	for (int i = 0; i < this->_score - static_cast<int>(this->_listRocks.size()); ++i)
 	{
-		uint32_t	n = std::rand() % this->_emptyCells.size();
-		auto		it = this->_emptyCells.begin();
+		uint32_t	n = std::rand() % this->_map.getEmptyCells().size();
+		auto		it = this->_map.getEmptyCells().begin();
 		std::advance(it, n);
 
-		this->_map->at(
-			std::get<1>(*it) * this->get_game_width() + std::get<0>(*it)
-			) = CELL_ROCK;
-
+		this->_map.setCell(std::get<0>(*it), std::get<1>(*it), CELL_ROCK);
 		this->_listRocks.push_back(std::pair <int, int>(std::get<0>(*it), std::get<1>(*it)));
-		this->_emptyCells.erase(it);
-	}
-	return ;
-}
-
-void					Engine::resetMap(void)
-{
-	for (int i = 0; i < this->_map->size(); ++i)
-		this->_map->at(i) = CELL_DEFAULT;
-	return ;
-}
-
-void					Engine::fillMap(void)
-{
-	this->_emptyCells.clear();
-
-	// fill snake cells
-	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
-	{
-		if ((*it)->get_isAlive() == 0)
-			continue ;
-		auto elem = (*it)->get_elems();
-		for (auto it2 = elem.begin(); it2 != elem.end(); ++it2)
-		{
-			this->_map->at(
-				std::get<0>(*it2) + std::get<1>(*it2) * this->get_game_width()
-				) = CELL_SNAKE;
-			//this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
-		}
-	}
-
-	for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
-	{
-		this->_map->at(
-			std::get<0>(*it) + std::get<1>(*it) * this->get_game_width()
-			) = CELL_FOOD;
-			//this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
-	}
-
-
-	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
-	{
-		this->_map->at(
-			std::get<0>(*it) + std::get<1>(*it) * this->get_game_width()
-			) = CELL_ROCK;
-			//this->_func_lib(Ins_Draw, &(this->_data));		// Draw snakes
-	}
-
-	for (int i = 0; i < this->_map->size(); ++i)
-	{
-		if (this->_map->at(i) != CELL_DEFAULT)
-			continue ;
-		this->_emptyCells.push_back(
-			std::pair <int, int>(
-				  i % this->get_game_width()
-				, i / this->get_game_width()
-				)
-			);
+		this->_map.getEmptyCells().erase(it);
 	}
 	return ;
 }
@@ -192,27 +134,22 @@ void					Engine::drawPlayers(void)
 void					Engine::drawFoods(void)
 {
 	for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
-	{
 		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xff00ff);		// Draw foods
-	}
 	return ;
 }
-
 
 void					Engine::drawRocks(void)
 {
 	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
-	{
 		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0x770033);		// Draw rocks
-	}
 	return ;
 }
 
 void					Engine::getInputs(void)
 {
-	auto	time = Clock::now();
-	static auto	oldtime = Clock::now();
-	long	duration = 0;
+	auto			time = Clock::now();
+	static auto		oldtime = Clock::now();
+	long			duration = 0;
 
 	if (this->_glib->getInput(4) == Exit)
 		exit (0);
@@ -233,11 +170,9 @@ void					Engine::getInputs(void)
 	return ;
 }
 
-void					Engine::run(void)
+
+int						Engine::load_lib(int lib)
 {
-	auto	time = Clock::now();
-	auto	oldtime = Clock::now();
-	long	duration = 0;
 	IGlib *	(*func_lib)();
 	char *	error;
 
@@ -249,11 +184,25 @@ void					Engine::run(void)
 	}
 
 	this->_glib = func_lib();
-	this->_glib->init(this->_width, this->_height, SQUARE);	// create window
+	this->_glib->init(this->_width, this->_height, SQUARE);		// create window
+	/*switch (lib)
+	{
+		case 0:
+		default:
+			
+	}*/
+	return (0);
+}
 
+void					Engine::run(void)
+{
+	auto	time = Clock::now();
+	auto	oldtime = Clock::now();
+	long	duration = 0;
+
+	this->_glib->clear();
 	while (1)
 	{
-		//this->_glib->clear();
 		this->getInputs();
 		this->drawPlayers();
 		this->drawFoods();
@@ -265,10 +214,8 @@ void					Engine::run(void)
 			continue ;
 		oldtime = Clock::now();
 		this->checkPlayers();
-		this->resetMap();
 		this->genFoods();
 		this->genRocks();
-		this->fillMap();
 		if (this->_nbPlayersAlive < 1)
 		{
 			std::cout << "Game over" << std::endl;
@@ -289,6 +236,12 @@ void					Engine::checkPlayers(void)
 		collision = this->checkCollision(std::get<0>(head), std::get<1>(head));
 		if (collision == 1)
 		{
+			--this->_nbPlayersAlive;
+			(*it)->set_isAlive(0);
+		}
+		else if (collision == 3 && (*it)->get_elems().back() != head)
+		{
+			(*it)->move();
 			--this->_nbPlayersAlive;
 			(*it)->set_isAlive(0);
 		}
@@ -322,13 +275,12 @@ int						Engine::checkCollision(int x, int y)
 		|| x < 0 || y < 0)
 		return (1);
 
-	int coord = y * this->get_game_width() + x;
-
-	if (this->_map->at(coord) == CELL_SNAKE
-		|| this->_map->at(coord) == CELL_ROCK)
+	if (this->_map.getCell(x, y) == CELL_SNAKE)
+		return (3);
+	if (this->_map.getCell(x, y) == CELL_ROCK)
 		return (1);
 
-	if (this->_map->at(coord) == CELL_FOOD)
+	if (this->_map.getCell(x, y) == CELL_FOOD)
 	{
 		std::pair <int, int>	head(x, y);
 		auto it = std::find(this->_listFoods.begin(), this->_listFoods.end(), head);
