@@ -15,16 +15,16 @@
 
 Glib::Glib()
 {
-	this->_input[0][SDL_SCANCODE_UP] = Top;
-	this->_input[0][SDL_SCANCODE_DOWN] = Bottom;
-	this->_input[0][SDL_SCANCODE_LEFT] = Left;
-	this->_input[0][SDL_SCANCODE_RIGHT] = Right;
-	this->_input[1][SDL_SCANCODE_W] = Top;
-	this->_input[1][SDL_SCANCODE_S] = Bottom;
-	this->_input[1][SDL_SCANCODE_A] = Left;
-	this->_input[1][SDL_SCANCODE_D] = Right;
-	this->_input[4][SDL_SCANCODE_ESCAPE] = Exit;
-	this->_input[4][SDL_SCANCODE_SPACE] = Pause;
+	this->_input[0][GLFW_KEY_UP] = Top;
+	this->_input[0][GLFW_KEY_DOWN] = Bottom;
+	this->_input[0][GLFW_KEY_LEFT] = Left;
+	this->_input[0][GLFW_KEY_RIGHT] = Right;
+	this->_input[1][GLFW_KEY_W] = Top;
+	this->_input[1][GLFW_KEY_S] = Bottom;
+	this->_input[1][GLFW_KEY_A] = Left;
+	this->_input[1][GLFW_KEY_D] = Right;
+	this->_input[4][GLFW_KEY_ESCAPE] = Exit;
+	this->_input[4][GLFW_KEY_SPACE] = Pause;
 	return ;
 }
 
@@ -44,44 +44,39 @@ void			Glib::init(int width, int height, int square)
 	this->_width = width;
 	this->_height = height;
 	this->_square = square;
-	// Notre fenêtre
 	
-    SDL_Window* fenetre(0);
-	
-    // Initialisation de la SDL
-	
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (!glfwInit())
+        return ;
+
+    this->_window = glfwCreateWindow(width, height, "Nibbler", NULL, NULL);
+    if (!this->_window)
     {
-        std::cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
-        SDL_Quit();
-		
+        glfwTerminate();
         return ;
     }
-	
-    // Création de la fenêtre
-	
-    this->_window = SDL_CreateWindow("Nibbler", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-    this->_renderer = SDL_CreateRenderer( this->_window, -1, SDL_RENDERER_ACCELERATED);
-    this->_state = SDL_GetKeyboardState(NULL);
+    glfwMakeContextCurrent(this->_window);
 	return ;
 }
 
-SDL_Window*		Glib::getWindow(void)
+GLFWwindow*		Glib::getWindow(void)
 {
 	return (this->_window);
 }
 
 void			Glib::display(void)
 {
-	SDL_RenderPresent(this->_renderer);
+	glfwSwapBuffers(this->_window);
+	glfwGetFramebufferSize(this->_window, &this->_width, &this->_height);
+    glViewport(0, 0, this->_width, this->_height);
+	/*SDL_RenderPresent(this->_renderer);
 	SDL_SetRenderDrawColor( this->_renderer, 0, 0, 0, 0 );
-	SDL_RenderClear( this->_renderer );
+	SDL_RenderClear( this->_renderer );*/
 	return ;
 }
 
 void			Glib::clear(void)
 {
-	SDL_RenderClear( this->_renderer );
+	//SDL_RenderClear( this->_renderer );
 	return ;
 }
 
@@ -92,7 +87,15 @@ int			Glib::getColor(int color, int type)
 
 void			Glib::draw(int x, int y, int color)
 {
-	SDL_Rect r;
+	glTranslatef(0.0f,0.0f,-6.0f);  
+	const GLfloat quadVertices[] = { -1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f, 
+        1.0f,-1.0f, 0.0f,
+        -1.0f,-1.0f, 0.0f
+    };
+    glVertexPointer(3, GL_FLOAT, 0, quadVertices);
+    glDrawArrays(GL_QUADS, 0, 4);
+	/*SDL_Rect r;
     r.x = x * this->_square;
     r.y = y * this->_square;
     r.w = this->_square;
@@ -104,25 +107,20 @@ void			Glib::draw(int x, int y, int color)
     r.w = this->_square+2;
     r.h = this->_square+2;
     SDL_SetRenderDrawColor(this->_renderer, 0xff, 0xff, 0xff, 0);
-    SDL_RenderDrawRect( this->_renderer, &r );
+    SDL_RenderDrawRect( this->_renderer, &r );*/
 	return ;
 }
 
 input			Glib::getInput(int id)
 {
-	SDL_Event evenements;
-	while (SDL_PollEvent(&evenements) == 1)
-	{
-		if (evenements.type == SDL_WINDOWEVENT && evenements.window.event == SDL_WINDOWEVENT_CLOSE) {
-			SDL_DestroyWindow(this->_window);
-			SDL_Quit();
-			return (Exit);
-		}
+	if (glfwWindowShouldClose(this->_window)) {
+		glfwDestroyWindow(this->_window);
+		glfwTerminate();
+		return (Exit);
 	}
-	SDL_PumpEvents();
 	for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
 	{
-		if (this->_state[it->first])
+		if (glfwGetKey(this->_window, it->first) == GLFW_PRESS)
 			return (it->second);
 	}
 	return (None);

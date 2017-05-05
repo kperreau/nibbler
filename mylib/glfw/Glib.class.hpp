@@ -18,7 +18,7 @@
 # include <sstream>
 # include <map>
 # include <../../main/includes/IGlib.class.hpp>
-# include <SDL.h>
+# include <GLFW/glfw3.h>
 
 class Glib : public IGlib
 {
@@ -27,7 +27,7 @@ class Glib : public IGlib
 		Glib(Glib const & src);
 		~Glib(void);
 		//IGlib &	operator=(IGlib const & rhd);
-		SDL_Window*				getWindow(void);
+		GLFWwindow*				getWindow(void);
 		void					display(void);
 		void					init(int width, int height, int square);
 		void					clear(void);
@@ -36,12 +36,10 @@ class Glib : public IGlib
 		int						getColor(int color, int type);
 
 	private:
-		const Uint8					*_state;
 		int							_width;
 		int							_height;
 		int							_square;
-		SDL_Window*					_window;
-		SDL_Renderer*				_renderer;
+		GLFWwindow*					_window;
 		std::map<int, std::map<int, input> >		_input;
 };
 
