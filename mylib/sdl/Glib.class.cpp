@@ -19,9 +19,9 @@ Glib::Glib()
 	this->_input[0][SDL_SCANCODE_DOWN] = Bottom;
 	this->_input[0][SDL_SCANCODE_LEFT] = Left;
 	this->_input[0][SDL_SCANCODE_RIGHT] = Right;
-	this->_input[1][SDL_SCANCODE_Z] = Top;
+	this->_input[1][SDL_SCANCODE_W] = Top;
 	this->_input[1][SDL_SCANCODE_S] = Bottom;
-	this->_input[1][SDL_SCANCODE_Q] = Left;
+	this->_input[1][SDL_SCANCODE_A] = Left;
 	this->_input[1][SDL_SCANCODE_D] = Right;
 	this->_input[4][SDL_SCANCODE_ESCAPE] = Exit;
 	this->_input[4][SDL_SCANCODE_SPACE] = Pause;
@@ -61,7 +61,8 @@ void			Glib::init(int width, int height, int square)
     // Création de la fenêtre
 	
     this->_window = SDL_CreateWindow("Nibbler", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-    this->_renderer =  SDL_CreateRenderer( this->_window, -1, SDL_RENDERER_ACCELERATED);
+    this->_renderer = SDL_CreateRenderer( this->_window, -1, SDL_RENDERER_ACCELERATED);
+    this->_state = SDL_GetKeyboardState(NULL);
 	return ;
 }
 
@@ -72,20 +73,9 @@ SDL_Window*		Glib::getWindow(void)
 
 void			Glib::display(void)
 {
-	if (1)
-	{
-		SDL_Event evenements;
-		/*while (SDL_PollEvent(&evenements) == 1)
-		{
-			if (evenements.type == SDL_QUIT) {
-				SDL_DestroyWindow(this->_window);
-    			SDL_Quit();
-			}
-		}*/
-		SDL_RenderPresent(this->_renderer);
-		SDL_SetRenderDrawColor( this->_renderer, 0, 0, 0, 0 );
-		SDL_RenderClear( this->_renderer );
-	}
+	SDL_RenderPresent(this->_renderer);
+	SDL_SetRenderDrawColor( this->_renderer, 0, 0, 0, 0 );
+	SDL_RenderClear( this->_renderer );
 	return ;
 }
 
@@ -120,21 +110,20 @@ void			Glib::draw(int x, int y, int color)
 
 input			Glib::getInput(int id)
 {
-	// Structure
 	SDL_Event evenements;
-
-
-	// Récupération d'un évènement
 	while (SDL_PollEvent(&evenements) == 1)
 	{
-		if (evenements.type == SDL_KEYDOWN)
-		{
-			for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
-			{
-				if (evenements.key.keysym.scancode == it->first)
-					return (it->second);
-			}
+		if (evenements.type == SDL_WINDOWEVENT && evenements.window.event == SDL_WINDOWEVENT_CLOSE) {
+			SDL_DestroyWindow(this->_window);
+			SDL_Quit();
+			return (Exit);
 		}
+	}
+	SDL_PumpEvents();
+	for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
+	{
+		if (this->_state[it->first])
+			return (it->second);
 	}
 	return (None);
 }

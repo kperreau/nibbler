@@ -36,6 +36,7 @@ class Glib : public IGlib
 		int						getColor(int color, int type);
 
 	private:
+		const Uint8					*_state;
 		int							_width;
 		int							_height;
 		int							_square;

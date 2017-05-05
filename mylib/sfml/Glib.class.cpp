@@ -57,12 +57,6 @@ void			Glib::display(void)
 {
 	if (this->_window.isOpen())
 	{
-		sf::Event event;
-		while (this->_window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				this->_window.close();
-		}
 		this->_window.display();
 		this->_window.clear();
 	}
@@ -109,26 +103,21 @@ void			Glib::draw(int x, int y, int color)
 
 input			Glib::getInput(int id)
 {
-	//sf::Event event;
-	
+	sf::Event event;
+	while (this->_window.pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed) {
+			this->_window.close();
+			return (Exit);
+		}
+	}
+
 	for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
 	{
 		if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(it->first)))
 			return (it->second);
 	}
 
-	/*while (this->_window.pollEvent(event))
-	{
-		if (event.type != sf::Event::KeyPressed)
-			continue ;
-		std::cout << "id: " << id  << std::endl;
-		std::cout << "map: " << this->_input[id][event.key.code] << std::endl;
-		std::cout << "count: " << this->_input[id].count(event.key.code) << std::endl;
-		if (this->_input[id].count(event.key.code) != 0)
-			return (this->_input[id][event.key.code]);
-		if (event.key.code == sf::Keyboard::Escape)
-			exit (0);
-	}*/
 	return (None);
 }
 
