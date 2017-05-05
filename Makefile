@@ -9,7 +9,7 @@
 #    Updated: 2017/05/04 19:43:17 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-all: core sfml sdl
+all: core sfml sdl glfw
 
 core:
 	make -C main/
@@ -20,14 +20,19 @@ sfml:
 sdl:
 	make -C mylib/sdl/
 
+glfw:
+	make -C mylib/glfw/
+
 re: fclean all
 
 clean:
 	make -C main/ clean
 	make -C mylib/sfml/ clean
 	make -C mylib/sdl/ clean
+	make -C mylib/glfw/ clean
 
 fclean:
 	make -C main/ fclean
 	make -C mylib/sfml/ fclean
 	make -C mylib/sdl/ fclean
+	make -C mylib/glfw/ fclean

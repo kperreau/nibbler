@@ -35,7 +35,23 @@ else
 	echo "\033[32;1m[SDL: Done]\033[0m"
 fi
 
-echo "\033[33;1mType:\033[0m export LD_LIBRARY_PATH=\"$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib\""
-echo "\033[33;1mType:\033[0m export DYLD_LIBRARY_PATH=\"$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib\""
-export LD_LIBRARY_PATH="$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib"
-export DYLD_LIBRARY_PATH="$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib"
+if [ -e "$C_PATH/glib/glfw" ]
+then
+	echo "\033[32;1mGLFW : [Already Done !]\033[0m"
+else
+	echo "\033[33;1m[GLFW: Downloading]"
+	git clone https://github.com/glfw/glfw.git glib/glfw
+	echo "\033[33m[GLFW: install]\c\n"
+	cd glib/glfw
+	cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$PWD .
+	make
+	make install
+	echo "\r\033[32;1m[GLFW: install Complete]"
+	cd $C_PATH
+	echo "\033[32;1m[GLFW: Done]\033[0m"
+fi
+
+echo "\033[33;1mType:\033[0m export LD_LIBRARY_PATH=\"$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib\""
+echo "\033[33;1mType:\033[0m export DYLD_LIBRARY_PATH=\"$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib\""
+export LD_LIBRARY_PATH="$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib"
+export DYLD_LIBRARY_PATH="$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib"
