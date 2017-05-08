@@ -13,7 +13,8 @@
 #include "Snake.class.hpp"
 
 Snake::Snake(std::pair <int, int> start, int const color, Map & map)
-: map(map), _len(4), _isAlive(1), _dir(Top), _nextDir(None), _id(_nextID++), _color(color)
+: map(map), _len(4), _isAlive(1), _dir(Top)
+, _nextDir(None), _id(_nextID++), _color(color), _malus(0)
 {
 	this->_elems.push_back(this->addElem(std::get<0>(start), std::get<1>(start)));
 	++std::get<1>(start);
@@ -106,6 +107,11 @@ int			Snake::getColor(void) const
 	return (this->_color);
 }
 
+int			Snake::getMalus(void) const
+{
+	return (this->_malus);
+}
+
 input		Snake::getDir(void) const
 {
 	return (this->_dir);
@@ -152,6 +158,15 @@ void			Snake::move(void)
 {
 	std::pair <int, int> head;
 
+	if (this->_malus > 0)
+	{
+		if (this->_nextDir.front() == Left)
+			this->_nextDir.front() = Right;
+		else if (this->_nextDir.front() == Right)
+			this->_nextDir.front() = Left;
+		--this->_malus;
+	}
+
 	head = this->next_move();
 
 //	if (this->_nextDir != None)
@@ -178,6 +193,18 @@ void			Snake::eat(void)
 	this->map.setCell(std::get<0>(this->_last), std::get<1>(this->_last), CELL_SNAKE);
 	this->map.delEmptyCell(this->_last);
 	this->_elems.push_back(this->_last);
+	return ;
+}
+
+void			Snake::eatMalus(void)
+{
+	this->map.setCell(
+		  std::get<0>(this->_elems.front())
+		, std::get<1>(this->_elems.front())
+		, CELL_SNAKE
+		);
+	if (this->_malus < 100)
+		this->_malus += 30;
 	return ;
 }
 

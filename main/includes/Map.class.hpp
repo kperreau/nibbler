@@ -24,7 +24,8 @@ enum	cell {
 	CELL_DEFAULT,
 	CELL_SNAKE,
 	CELL_FOOD,
-	CELL_ROCK
+	CELL_ROCK,
+	CELL_MALUS
 };
 
 class Map

@@ -52,9 +52,11 @@ class Engine
 		void					drawPlayers(void);
 		void					drawFoods(void);
 		void					drawRocks(void);
+		void					drawMalus(void);
 		void					resetMap(void);
 		void					genFoods(void);
 		void					genRocks(void);
+		void					genMalus(void);
 		void					getInputs(void);
 		int						load_lib(input lib);
 		Engine &				operator=(Engine const & rhs);
@@ -76,6 +78,7 @@ class Engine
 		Map							_map;
 		std::list <std::pair <int, int> >		_listFoods;
 		std::list <std::pair <int, int> >		_listRocks;
+		std::list <std::pair <int, int> >		_listMalus;
 };
 
 std::ostream &		operator<<(std::ostream & o, Engine const & i);

@@ -98,6 +98,8 @@ void					Engine::genFoods(void)
 
 void					Engine::genRocks(void)
 {
+	std::srand(time(NULL));
+
 	if (this->_difficulty < 3)
 		return ;
 	
@@ -114,6 +116,23 @@ void					Engine::genRocks(void)
 	return ;
 }
 
+void					Engine::genMalus(void)
+{
+	std::srand(time(NULL));
+
+	if (this->_difficulty < 4
+		|| std::rand() % 10 < 6)
+		return ;
+	uint32_t	n = std::rand() % this->_map.getEmptyCells().size();
+	auto		it = this->_map.getEmptyCells().begin();
+	std::advance(it, n);
+
+	this->_map.setCell(std::get<0>(*it), std::get<1>(*it), CELL_MALUS);
+	this->_listMalus.push_back(std::pair <int, int>(std::get<0>(*it), std::get<1>(*it)));
+	this->_map.getEmptyCells().erase(it);
+	return ;
+}
+
 void					Engine::drawPlayers(void)
 {
 	int  color = 0;
@@ -125,6 +144,8 @@ void					Engine::drawPlayers(void)
 		{
 			color = (*it)->getColor();
 			if (it2 == elem.begin())
+				color /= 2;
+			if ((*it)->getMalus() > 0)
 				color /= 2;
 			this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color);		// Draw snakes
 		}
@@ -143,6 +164,13 @@ void					Engine::drawRocks(void)
 {
 	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
 		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0x770033);		// Draw rocks
+	return ;
+}
+
+void					Engine::drawMalus(void)
+{
+	for (auto it = this->_listMalus.begin(); it != this->_listMalus.end(); ++it)
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xaa00a5);		// Draw malus
 	return ;
 }
 
@@ -234,6 +262,7 @@ void					Engine::run(void)
 		this->drawPlayers();
 		this->drawFoods();
 		this->drawRocks();
+		this->drawMalus();
 		this->_glib->display();
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
@@ -276,9 +305,15 @@ void					Engine::checkPlayers(void)
 		{
 			(*it)->move();
 			(*it)->eat();
+			this->genMalus();
 			++this->_score;
 			if (this->_difficulty > 1 && this->_speed > 50)
 				this->_speed -= 2;
+		}
+		else if (collision == 4)
+		{
+			(*it)->move();
+			(*it)->eatMalus();
 		}
 		else
 			(*it)->move();
@@ -306,6 +341,16 @@ int						Engine::checkCollision(int x, int y)
 		return (3);
 	if (this->_map.getCell(x, y) == CELL_ROCK)
 		return (1);
+	if (this->_map.getCell(x, y) == CELL_MALUS)
+	{
+		std::pair <int, int>	head(x, y);
+		auto it = std::find(this->_listMalus.begin(), this->_listMalus.end(), head);
+		if (it != this->_listMalus.end())
+		{
+			this->_listMalus.erase(it);
+			return (4);
+		}
+	}
 
 	if (this->_map.getCell(x, y) == CELL_FOOD)
 	{

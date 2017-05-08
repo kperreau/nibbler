@@ -37,7 +37,9 @@ class Snake
 		void					setDir(input val);
 		int						getID(void) const;
 		int						getColor(void) const;
+		int						getMalus(void) const;
 		void					eat(void);
+		void					eatMalus(void);
 		std::pair <int, int>	next_move(void);
 		std::pair <int, int>	addElem(int x, int y);
 		int						checkDir(input val);
@@ -49,6 +51,7 @@ class Snake
 		uint32_t			_len;
 		char				_isAlive;
 		input				_dir;
+		int					_malus;
 		//input				_nextDir;
 		std::list <input>	_nextDir;
 		const int			_id;

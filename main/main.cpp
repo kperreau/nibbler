@@ -39,7 +39,7 @@ void		put_error(std::string error)
 void		usage(char *name)
 {
 	std::cout << "usage: " << name << " [xyph]" << std::endl;
-	std::cout << "'-d' for difficulty. 1 - Normal, 2 - Medium, 3 - Hard" << std::endl;
+	std::cout << "'-d' for difficulty. 1 - easy, 2 - Normal, 3 - Medium, 4 - Hard" << std::endl;
 	std::cout << "'-x size' to set width of window" << std::endl;
 	std::cout << "'-y size' to set height of window" << std::endl;
 	std::cout << "'-p' to specify number of players " << std::endl;
@@ -94,7 +94,7 @@ t_opts		options(int ac, char **av)
 		put_error("You have to specify the window size");
 	if (opts.width < 0 || opts.height < 0)
 		put_error("Please type positives values for window format");
-	if (opts.difficulty < 1 || opts.difficulty > 3)
+	if (opts.difficulty < 1 || opts.difficulty > 4)
 		put_error("Wrong value for difficulty");
 	if (opts.players < 1 || opts.players > 4)
 		put_error("Wrong players number");
