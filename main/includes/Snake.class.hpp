@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:32 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 21:27:57 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:20:49 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ class Snake
 		uint32_t			_len;
 		char				_isAlive;
 		input				_dir;
-		input				_nextDir;
+		//input				_nextDir;
+		std::list <input>	_nextDir;
 		const int			_id;
 		uint32_t			_speed;
 		int					_color;

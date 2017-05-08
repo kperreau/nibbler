@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 21:39:52 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 16:02:07 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,14 @@ void		Snake::set_isAlive(char val)
 
 void		Snake::setNextDir(input val)
 {
-	if (val != None)
-		this->_nextDir = val;
+	if (val != None && val != this->_nextDir.back())
+		this->_nextDir.push_back(val);
+
+	if (this->_nextDir.size() > 4)
+		this->_nextDir.pop_front();
+
+//	if (val != None)
+//			this->_nextDir = val;
 	return ;
 }
 
@@ -109,9 +115,13 @@ std::pair <int, int>	Snake::next_move(void)
 	std::pair <int, int>	head;
 	input					nextDir = this->_dir;
 
-	if (this->_nextDir != None
+/*	if (this->_nextDir != None
 		&& this->checkDir(this->_nextDir) == 1)
-		nextDir = this->_nextDir;
+		nextDir = this->_nextDir;*/
+
+	if (this->_nextDir.front() != None
+		&& this->checkDir(this->_nextDir.front()) == 1)
+		nextDir = this->_nextDir.front();
 	switch (nextDir)
 	{
 		case Top:
@@ -141,11 +151,16 @@ void			Snake::move(void)
 {
 	std::pair <int, int> head;
 
-
 	head = this->next_move();
-	
-	if (this->_nextDir != None)
-		this->setDir(this->_nextDir);
+
+//	if (this->_nextDir != None)
+//		this->setDir(this->_nextDir);
+
+	if (this->_nextDir.front() != None)
+	{
+		this->setDir(this->_nextDir.front());
+		this->_nextDir.pop_front();
+	}
 
 	this->_last = this->_elems.back();
 	this->map.delEmptyCell(head);
