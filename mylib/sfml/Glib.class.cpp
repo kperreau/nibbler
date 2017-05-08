@@ -15,19 +15,19 @@
 
 Glib::Glib()
 {
-	this->_input[0][sf::Keyboard::Up] = Top;
-	this->_input[0][sf::Keyboard::Down] = Bottom;
-	this->_input[0][sf::Keyboard::Left] = Left;
-	this->_input[0][sf::Keyboard::Right] = Right;
-	this->_input[1][sf::Keyboard::Z] = Top;
-	this->_input[1][sf::Keyboard::S] = Bottom;
-	this->_input[1][sf::Keyboard::Q] = Left;
-	this->_input[1][sf::Keyboard::D] = Right;
-	this->_input[4][sf::Keyboard::Escape] = Exit;
-	this->_input[4][sf::Keyboard::Space] = Pause;
-	this->_input[4][sf::Keyboard::F1] = F1;
-	this->_input[4][sf::Keyboard::F2] = F2;
-	this->_input[4][sf::Keyboard::F3] = F3;
+	this->_input[sf::Keyboard::Up] = std::pair<input, int>(Top, 0);
+	this->_input[sf::Keyboard::Down] = std::pair<input, int>(Bottom, 0);
+	this->_input[sf::Keyboard::Left] = std::pair<input, int>(Left, 0);
+	this->_input[sf::Keyboard::Right] = std::pair<input, int>(Right, 0);
+	this->_input[sf::Keyboard::Z] = std::pair<input, int>(Top, 1);
+	this->_input[sf::Keyboard::S] = std::pair<input, int>(Bottom, 1);
+	this->_input[sf::Keyboard::Q] = std::pair<input, int>(Left, 1);
+	this->_input[sf::Keyboard::D] = std::pair<input, int>(Right, 1);
+	this->_input[sf::Keyboard::Escape] = std::pair<input, int>(Exit, 4);
+	this->_input[sf::Keyboard::Space] = std::pair<input, int>(Pause, 4);
+	this->_input[sf::Keyboard::F1] = std::pair<input, int>(F1, 4);
+	this->_input[sf::Keyboard::F2] = std::pair<input, int>(F2, 4);
+	this->_input[sf::Keyboard::F3] = std::pair<input, int>(F3, 4);
 	return ;
 }
 
@@ -111,9 +111,10 @@ void			Glib::draw(int x, int y, int color)
 	return ;
 }
 
-input			Glib::getInput(int id)
+std::list <std::pair <input, int> >			Glib::getInput(int id)
 {
-	sf::Event event;
+	std::list <std::pair <input, int> >	keys;
+	sf::Event			event;
 
 
 	while (this->_window.pollEvent(event))
@@ -121,20 +122,16 @@ input			Glib::getInput(int id)
 		if (event.type == sf::Event::Closed)
 		{
 			this->_window.close();
-			return (Exit);
+			keys.push_front(std::pair<input, int>(Exit, 4));
+		}
+		if (event.type == sf::Event::KeyPressed
+			&& this->_input.count(event.key.code)
+			&& this->_window.hasFocus())
+		{
+			keys.push_front(this->_input.at(event.key.code));
 		}
 	}
-
-	if (!this->_window.hasFocus())
-		return (None);
-
-	for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
-	{
-		if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(it->first)))
-			return (it->second);
-	}
-
-	return (None);
+	return (keys);
 }
 
 /*IGlib &			Glib::operator=(IGlib const & rhd)

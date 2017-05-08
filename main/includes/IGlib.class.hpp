@@ -38,7 +38,7 @@ class IGlib
 		virtual void					clear(void) = 0;
 		virtual void					exit(void) = 0;
 		virtual void					draw(int x, int y, int color) = 0;
-		virtual input					getInput(int id) = 0;
+		virtual std::list <std::pair <input, int> >		getInput(int id) = 0;
 		virtual int						getColor(int color, int type) = 0;
 };
 

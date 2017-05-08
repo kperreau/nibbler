@@ -52,7 +52,6 @@ class Snake
 		char				_isAlive;
 		input				_dir;
 		int					_malus;
-		//input				_nextDir;
 		std::list <input>	_nextDir;
 		const int			_id;
 		uint32_t			_speed;

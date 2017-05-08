@@ -176,32 +176,37 @@ void					Engine::drawMalus(void)
 
 void					Engine::getInputs(void)
 {
-	auto			time = Clock::now();
-	static auto		oldtime = Clock::now();
-	long			duration = 0;
-	input			key = None;
+	auto				time = Clock::now();
+	static auto			oldtime = Clock::now();
+	long				duration = 0;
+	std::list <std::pair <input, int> >	keys;
 
 
-	key = this->_glib->getInput(4);
+	keys = this->_glib->getInput(0);
 
-	if (key == Exit)
-		exit (0);
-
-	duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
-	if (duration > this->_speed * 1000000)
+	for (auto it = keys.begin(); it != keys.end(); ++it)
 	{
-		if (key == Pause)
+		if (std::get<0>(*it) == Exit)
+			exit (0);
+		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
+		if (duration > this->_speed * 1000000)
 		{
-			oldtime = Clock::now();
-			this->_pause = !this->_pause;
+			if (std::get<0>(*it) == Pause)
+			{
+				oldtime = Clock::now();
+				this->_pause = !this->_pause;
+			}
+		}
+		if (std::get<0>(*it) >= F1 && std::get<0>(*it) <= F3)
+			this->load_lib(std::get<0>(*it));
+		if (this->_pause)
+			return ;
+		if (std::get<0>(*it) >= Left && std::get<0>(*it) <= Bottom)
+		{
+			Snake * p = this->get_player_by_id(std::get<1>(*it));
+			p->setNextDir(std::get<0>(*it));
 		}
 	}
-	if (key >= F1 && key <= F3)
-		this->load_lib(key);
-	if (this->_pause)
-		return ;
-	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
-		(*it)->setNextDir(this->_glib->getInput((*it)->getID()));
 	return ;
 }
 
@@ -375,7 +380,7 @@ void					Engine::setRate(void)
 	return ;
 }
 
-Snake const *			Engine::get_player_by_id(int id) const
+Snake		*			Engine::get_player_by_id(int id)
 {
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 	{

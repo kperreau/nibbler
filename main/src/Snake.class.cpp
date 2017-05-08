@@ -84,11 +84,9 @@ void		Snake::setNextDir(input val)
 		&& val != this->_nextDir.back())
 		this->_nextDir.push_back(val);
 
-	if (this->_nextDir.size() > 3)
+	if (this->_nextDir.size() > 4)
 		this->_nextDir.pop_front();
 
-//	if (val != None)
-//			this->_nextDir = val;
 	return ;
 }
 
@@ -121,10 +119,6 @@ std::pair <int, int>	Snake::next_move(void)
 {
 	std::pair <int, int>	head;
 	input					nextDir = this->_dir;
-
-/*	if (this->_nextDir != None
-		&& this->checkDir(this->_nextDir) == 1)
-		nextDir = this->_nextDir;*/
 
 	if (this->_nextDir.front() != None
 		&& this->checkDir(this->_nextDir.front()) == 1)
@@ -168,9 +162,6 @@ void			Snake::move(void)
 	}
 
 	head = this->next_move();
-
-//	if (this->_nextDir != None)
-//		this->setDir(this->_nextDir);
 
 	if (this->_nextDir.front() != None)
 	{

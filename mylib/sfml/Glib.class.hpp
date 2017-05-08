@@ -15,6 +15,7 @@
 # include <iostream>
 # include <string>
 # include <ctime>
+# include <list>
 # include <sstream>
 # include <../../main/includes/IGlib.class.hpp>
 # include <SFML/Graphics.hpp>
@@ -32,7 +33,7 @@ class Glib : public IGlib
 		void					clear(void);
 		void					exit(void);
 		void					draw(int x, int y, int color);
-		input					getInput(int id);
+		std::list <std::pair <input, int> >		getInput(int id);
 		int						getColor(int color, int type);
 
 	private:
@@ -40,7 +41,7 @@ class Glib : public IGlib
 		int							_height;
 		int							_square;
 		sf::RenderWindow			_window;
-		std::map<int, std::map<int, input> >		_input;
+		std::map<int, std::pair<input, int>>		_input;
 };
 
 //std::ostream &		operator<<(std::ostream & o, Glib const & i);

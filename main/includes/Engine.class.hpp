@@ -42,7 +42,7 @@ class Engine
 		int						get_height(void) const;
 		int						get_game_width(void) const;
 		int						get_game_height(void) const;
-		Snake const *			get_player_by_id(int id) const;
+		Snake *					get_player_by_id(int id);
 		std::list <Snake *>		get_players_list(void) const;
 		void					run(void);
 		void					checkPlayers(void);
