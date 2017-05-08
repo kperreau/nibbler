@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/04/21 15:56:02 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:42:47 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ enum	input {
 	Bottom,
 	Exit,
 	Pause,
+	F1,
+	F2,
+	F3
 };
 
 class IGlib
@@ -33,6 +36,7 @@ class IGlib
 		virtual void					init(int width, int height, int square) = 0;
 		virtual void					display(void) = 0;
 		virtual void					clear(void) = 0;
+		virtual void					exit(void) = 0;
 		virtual void					draw(int x, int y, int color) = 0;
 		virtual input					getInput(int id) = 0;
 		virtual int						getColor(int color, int type) = 0;

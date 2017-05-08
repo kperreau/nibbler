@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/01 15:24:58 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:47:21 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ Glib::Glib()
 	this->_input[1][sf::Keyboard::D] = Right;
 	this->_input[4][sf::Keyboard::Escape] = Exit;
 	this->_input[4][sf::Keyboard::Space] = Pause;
+	this->_input[4][sf::Keyboard::F1] = F1;
+	this->_input[4][sf::Keyboard::F2] = F2;
+	this->_input[4][sf::Keyboard::F3] = F3;
 	return ;
 }
 
@@ -67,6 +70,12 @@ void			Glib::clear(void)
 {
 	if (this->_window.isOpen())
 		this->_window.clear();
+	return ;
+}
+
+void			Glib::exit(void)
+{
+	this->_window.close();
 	return ;
 }
 

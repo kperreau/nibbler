@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:10:03 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:14:28 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,5 @@ Map &				Map::operator=(Map const & rhs)
 	this->_height = rhs.getHeight();
 	this->_map = rhs.getMap();
 	this->initEmptyCells();
-	//this->_emptyCells = rhs.getEmptyCells();
 	return (*this);
 }

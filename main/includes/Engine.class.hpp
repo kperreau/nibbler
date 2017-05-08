@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 21:40:08 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:29:59 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef std::chrono::high_resolution_clock Clock;
 class Engine
 {
 	public:
-		Engine(int  width, int height, int nb_players, void *handle, uint32_t difficulty);
+		Engine(int  width, int height, int nb_players, uint32_t difficulty);
 		Engine(Engine const & src);
 		~Engine(void);
 		int						get_nbPlayers(void) const;
@@ -56,7 +56,7 @@ class Engine
 		void					genFoods(void);
 		void					genRocks(void);
 		void					getInputs(void);
-		int						load_lib(int lib);
+		int						load_lib(input lib);
 		Engine &				operator=(Engine const & rhs);
 
 	private:
@@ -68,9 +68,9 @@ class Engine
 		int							_score;
 		uint32_t					_difficulty;
 		long						_rate;
-		void *						_handle;
 		IGlib *						_glib;
 		bool						_pause;
+		input						_lib;
 		int const					_color[4] = {0xff, 0xff00, 0xff0000};
 		std::list <Snake *>			_listPlayers;
 		Map							_map;

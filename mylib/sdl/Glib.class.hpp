@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/04 17:10:28 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:43:15 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Glib : public IGlib
 		void					display(void);
 		void					init(int width, int height, int square);
 		void					clear(void);
+		void					exit(void);
 		void					draw(int x, int y, int color);
 		input					getInput(int id);
 		int						getColor(int color, int type);

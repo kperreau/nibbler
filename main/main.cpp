@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 19:16:21 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 20:06:40 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:23:23 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ t_opts		options(int ac, char **av)
 int		main(int ac, char **av)
 {
 	t_opts		opts;
-	void *		handle;
 
 	if (ac < 2)
 	{
@@ -113,14 +112,6 @@ int		main(int ac, char **av)
 	}
 	opts = options(ac, av);
 
-	handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
-	//handle = dlopen("../mylib/sdl/libsdl.dylib", RTLD_NOW|RTLD_GLOBAL);
-	if (!handle)
-	{
-		fputs (dlerror(), stderr);
-		exit(1);
-	}
-	Engine	engine(opts.width, opts.height, opts.players, handle, opts.difficulty);
-	dlclose(handle);
+	Engine	engine(opts.width, opts.height, opts.players, opts.difficulty);
 	return (0);
 }

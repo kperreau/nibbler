@@ -6,14 +6,14 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 22:10:39 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:48:32 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Engine.class.hpp"
 
-Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t difficulty)
-: _speed(150), _score(0), _difficulty(difficulty), _rate(0), _handle(handle), _pause(false)
+Engine::Engine(int width, int height, int nb_players, uint32_t difficulty)
+: _speed(150), _score(0), _difficulty(difficulty), _rate(0), _pause(false), _lib(F1)
 {
 	if (nb_players < 1 && nb_players > 4)
 	{
@@ -51,7 +51,7 @@ Engine::Engine(int width, int height, int nb_players, void *handle, uint32_t dif
 			);
 	}
 
-	this->load_lib(0);
+	this->load_lib(this->_lib);
 	this->genFoods();
 	this->run();		// run the game
 	return ;
@@ -150,14 +150,18 @@ void					Engine::getInputs(void)
 	auto			time = Clock::now();
 	static auto		oldtime = Clock::now();
 	long			duration = 0;
+	input			key = None;
 
-	if (this->_glib->getInput(4) == Exit)
+
+	key = this->_glib->getInput(4);
+
+	if (key == Exit)
 		exit (0);
 
 	duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
 	if (duration > this->_speed * 1000000)
 	{
-		if (this->_glib->getInput(4) == Pause)
+		if (key == Pause)
 		{
 			oldtime = Clock::now();
 			this->_pause = !this->_pause;
@@ -165,18 +169,44 @@ void					Engine::getInputs(void)
 	}
 	if (this->_pause)
 		return ;
+	if (key >= F1 && key <= F3)
+		this->load_lib(key);
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 		(*it)->setNextDir(this->_glib->getInput((*it)->getID()));
 	return ;
 }
 
-
-int						Engine::load_lib(int lib)
+int						Engine::load_lib(input lib)
 {
-	IGlib *	(*func_lib)();
-	char *	error;
+	IGlib *			(*func_lib)();
+	char *			error;
+	static void *	handle = NULL;
 
-	*(void**)&(func_lib) = dlsym(this->_handle, "getGlib");
+	if (handle != NULL)
+	{
+		this->_glib->exit();
+		dlclose(handle);
+	}
+	switch (lib)
+	{
+		case 0:
+			handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
+			break ;
+		case 1:
+			handle = dlopen("../mylib/sfml/libsdl.dylib", RTLD_NOW|RTLD_GLOBAL);
+			break ;
+		case 2:
+			handle = dlopen("../mylib/sfml/libglfw_nibbler.dylib", RTLD_NOW|RTLD_GLOBAL);
+			break ;
+		default:
+			handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
+	}
+	if (!handle)
+	{
+		fputs (dlerror(), stderr);
+		exit(1);
+	}
+	*(void**)&(func_lib) = dlsym(handle, "getGlib");
 	if ((error = dlerror()) != NULL)
 	{
 		fputs(error, stderr);
@@ -185,12 +215,7 @@ int						Engine::load_lib(int lib)
 
 	this->_glib = func_lib();
 	this->_glib->init(this->_width, this->_height, SQUARE);		// create window
-	/*switch (lib)
-	{
-		case 0:
-		default:
-			
-	}*/
+	this->_glib->clear();
 	return (0);
 }
 
@@ -200,7 +225,6 @@ void					Engine::run(void)
 	auto	oldtime = Clock::now();
 	long	duration = 0;
 
-	this->_glib->clear();
 	while (1)
 	{
 		this->getInputs();

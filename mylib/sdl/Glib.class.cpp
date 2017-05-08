@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/04 17:12:54 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:46:31 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ Glib::Glib()
 	this->_input[1][SDL_SCANCODE_D] = Right;
 	this->_input[4][SDL_SCANCODE_ESCAPE] = Exit;
 	this->_input[4][SDL_SCANCODE_SPACE] = Pause;
+	this->_input[4][SDL_SCANCODE_F1] = F1;
+	this->_input[4][SDL_SCANCODE_F2] = F2;
+	this->_input[4][SDL_SCANCODE_F3] = F3;
 	return ;
 }
 
@@ -82,6 +85,13 @@ void			Glib::display(void)
 void			Glib::clear(void)
 {
 	SDL_RenderClear( this->_renderer );
+	return ;
+}
+
+void			Glib::exit(void)
+{
+	SDL_DestroyWindow(this->_window);
+	SDL_Quit();
 	return ;
 }
 

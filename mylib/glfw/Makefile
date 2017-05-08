@@ -6,11 +6,11 @@
 #    By: kperreau <kperreau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/05 14:10:51 by kperreau          #+#    #+#              #
-#    Updated: 2017/05/04 17:32:27 by kperreau         ###   ########.fr        #
+#    Updated: 2017/05/05 22:36:15 by kperreau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libglfw.dylib
+NAME = libglfw_nibbler.dylib
 
 SRCDIR = ./
 
