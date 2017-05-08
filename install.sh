@@ -51,6 +51,8 @@ else
 	echo "\033[32;1m[GLFW: Done]\033[0m"
 fi
 
+make
+
 echo "\033[33;1mType:\033[0m export LD_LIBRARY_PATH=\"$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib\""
 echo "\033[33;1mType:\033[0m export DYLD_LIBRARY_PATH=\"$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib\""
 export LD_LIBRARY_PATH="$C_PATH/glib/sfml/lib:$C_PATH/glib/sdl/lib:$C_PATH/glib/glfw/lib"
