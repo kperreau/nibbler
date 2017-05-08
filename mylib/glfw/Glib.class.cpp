@@ -51,6 +51,12 @@ void			Glib::init(int width, int height, int square)
 	if (!glfwInit())
         return ;
 
+	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
+
     this->_window = glfwCreateWindow(width, height, "Nibbler GLFW", NULL, NULL);
     if (!this->_window)
     {
@@ -76,17 +82,14 @@ void			Glib::exit(void)
 void			Glib::display(void)
 {
 	glfwSwapBuffers(this->_window);
+	glfwPollEvents();
 	glfwGetFramebufferSize(this->_window, &this->_width, &this->_height);
     glViewport(0, 0, this->_width, this->_height);
-	/*SDL_RenderPresent(this->_renderer);
-	SDL_SetRenderDrawColor( this->_renderer, 0, 0, 0, 0 );
-	SDL_RenderClear( this->_renderer );*/
 	return ;
 }
 
 void			Glib::clear(void)
 {
-	//SDL_RenderClear( this->_renderer );
 	return ;
 }
 
@@ -97,27 +100,17 @@ int			Glib::getColor(int color, int type)
 
 void			Glib::draw(int x, int y, int color)
 {
-	glTranslatef(0.0f,0.0f,-6.0f);  
-	const GLfloat quadVertices[] = { -1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f, 
-        1.0f,-1.0f, 0.0f,
-        -1.0f,-1.0f, 0.0f
-    };
-    glVertexPointer(3, GL_FLOAT, 0, quadVertices);
-    glDrawArrays(GL_QUADS, 0, 4);
-	/*SDL_Rect r;
-    r.x = x * this->_square;
-    r.y = y * this->_square;
-    r.w = this->_square;
-    r.h = this->_square;
-    SDL_SetRenderDrawColor( this->_renderer, this->getColor(color, 0), this->getColor(color, 1), this->getColor(color, 2), 0 );
-	SDL_RenderFillRect( this->_renderer, &r );
-    r.x = x * this->_square-1;
-    r.y = y * this->_square-1;
-    r.w = this->_square+2;
-    r.h = this->_square+2;
-    SDL_SetRenderDrawColor(this->_renderer, 0xff, 0xff, 0xff, 0);
-    SDL_RenderDrawRect( this->_renderer, &r );*/
+	glClearColor(0.0F,0.0F,0.0F,0.0F) ;
+	glClear(GL_COLOR_BUFFER_BIT) ;
+	glColor3f(1.0F,1.0F,1.0F) ;
+	glOrtho(-1.0,1.0,-1.0,1.0,-1.0,1.0) ;
+	glBegin(GL_POLYGON) ;
+	glVertex2f(-0.5F,-0.5F) ;
+	glVertex2f(-0.5F,0.5F) ;
+	glVertex2f(0.5F,0.5F) ;
+	glVertex2f(0.5F,-0.5F) ;
+	glEnd() ;
+	glFlush() ;
 	return ;
 }
 
