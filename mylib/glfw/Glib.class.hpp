@@ -31,6 +31,7 @@ class Glib : public IGlib
 		void					display(void);
 		void					init(int width, int height, int square);
 		void					clear(void);
+		void					exit(void);
 		void					draw(int x, int y, int color);
 		input					getInput(int id);
 		int						getColor(int color, int type);

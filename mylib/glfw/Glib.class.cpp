@@ -25,6 +25,9 @@ Glib::Glib()
 	this->_input[1][GLFW_KEY_D] = Right;
 	this->_input[4][GLFW_KEY_ESCAPE] = Exit;
 	this->_input[4][GLFW_KEY_SPACE] = Pause;
+	this->_input[4][GLFW_KEY_F1] = F1;
+	this->_input[4][GLFW_KEY_F2] = F2;
+	this->_input[4][GLFW_KEY_F3] = F3;
 	return ;
 }
 
@@ -48,7 +51,7 @@ void			Glib::init(int width, int height, int square)
 	if (!glfwInit())
         return ;
 
-    this->_window = glfwCreateWindow(width, height, "Nibbler", NULL, NULL);
+    this->_window = glfwCreateWindow(width, height, "Nibbler GLFW", NULL, NULL);
     if (!this->_window)
     {
         glfwTerminate();
@@ -61,6 +64,13 @@ void			Glib::init(int width, int height, int square)
 GLFWwindow*		Glib::getWindow(void)
 {
 	return (this->_window);
+}
+
+void			Glib::exit(void)
+{
+	glfwDestroyWindow(this->_window);
+	glfwTerminate();
+	return ;
 }
 
 void			Glib::display(void)

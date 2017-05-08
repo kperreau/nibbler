@@ -48,6 +48,7 @@ void				Glib::init(int width, int height, int square)
 	this->_height = height;
 	this->_square = square;
 	this->_window.create(sf::VideoMode(width, height), "Nibbler SFML");
+	this->_window.setPosition(sf::Vector2i((sf::VideoMode::getDesktopMode().width/2)-(width/2), (sf::VideoMode::getDesktopMode().height/2)-(height/2)));
 	return ;
 }
 
