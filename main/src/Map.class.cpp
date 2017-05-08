@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 21:22:28 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 14:10:03 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void					Map::delEmptyCell(std::pair <int, int> empty_cell)
 	for (auto it = this->_emptyCells.begin(); it != this->_emptyCells.end(); ++it)
 	{
 		if (empty_cell == *it)
-			this->_emptyCells.erase(it);
+			it = this->_emptyCells.erase(it);
 	}
 
 	return ;
