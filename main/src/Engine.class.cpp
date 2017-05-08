@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 15:13:33 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 18:40:52 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,10 +168,10 @@ void					Engine::getInputs(void)
 			this->_pause = !this->_pause;
 		}
 	}
-	if (this->_pause)
-		return ;
 	if (key >= F1 && key <= F3)
 		this->load_lib(key);
+	if (this->_pause)
+		return ;
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
 		(*it)->setNextDir(this->_glib->getInput((*it)->getID()));
 	return ;

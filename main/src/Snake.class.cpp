@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 16:02:07 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 18:37:12 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,11 @@ void		Snake::set_isAlive(char val)
 
 void		Snake::setNextDir(input val)
 {
-	if (val != None && val != this->_nextDir.back())
+	if (val != None
+		&& val != this->_nextDir.back())
 		this->_nextDir.push_back(val);
 
-	if (this->_nextDir.size() > 4)
+	if (this->_nextDir.size() > 3)
 		this->_nextDir.pop_front();
 
 //	if (val != None)
