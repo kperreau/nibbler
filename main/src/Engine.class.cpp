@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 15:06:27 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:13:33 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ Engine::~Engine(void)
 {
 	if (!this->_listPlayers.empty())
 		this->_listPlayers.clear();
+	this->load_lib(None);
 	return ;
 }
 
@@ -187,6 +188,8 @@ int						Engine::load_lib(input lib)
 		this->_glib->exit();
 		dlclose(handle);
 	}
+	if (lib == None)
+		return (0);
 	switch (lib)
 	{
 		case F1:
