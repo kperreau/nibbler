@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:47:21 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:07:24 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void				Glib::init(int width, int height, int square)
 	this->_width = width;
 	this->_height = height;
 	this->_square = square;
-	this->_window.create(sf::VideoMode(width, height), "Nibbler");
+	this->_window.create(sf::VideoMode(width, height), "Nibbler SFML");
 	return ;
 }
 

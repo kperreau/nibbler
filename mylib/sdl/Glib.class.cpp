@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:46:31 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:07:36 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void			Glib::init(int width, int height, int square)
 	
     // Création de la fenêtre
 	
-    this->_window = SDL_CreateWindow("Nibbler", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    this->_window = SDL_CreateWindow("Nibbler SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     this->_renderer = SDL_CreateRenderer( this->_window, -1, SDL_RENDERER_ACCELERATED);
     this->_state = SDL_GetKeyboardState(NULL);
 	return ;

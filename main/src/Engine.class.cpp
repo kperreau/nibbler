@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:48:32 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:06:27 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,14 +189,14 @@ int						Engine::load_lib(input lib)
 	}
 	switch (lib)
 	{
-		case 0:
+		case F1:
 			handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
 			break ;
-		case 1:
-			handle = dlopen("../mylib/sfml/libsdl.dylib", RTLD_NOW|RTLD_GLOBAL);
+		case F2:
+			handle = dlopen("../mylib/sdl/libsdl.dylib", RTLD_NOW|RTLD_GLOBAL);
 			break ;
-		case 2:
-			handle = dlopen("../mylib/sfml/libglfw_nibbler.dylib", RTLD_NOW|RTLD_GLOBAL);
+		case F3:
+			handle = dlopen("../mylib/glfw/libglfw_nibbler.dylib", RTLD_NOW|RTLD_GLOBAL);
 			break ;
 		default:
 			handle = dlopen("../mylib/sfml/libsfml.dylib", RTLD_NOW|RTLD_GLOBAL);
