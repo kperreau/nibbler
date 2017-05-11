@@ -28,7 +28,8 @@ SRC = $(patsubst %, $(SRCDIR)/%, $(CFILES))
 
 OBJ = $(SRC:.cpp=.o) $(MAIN:.cpp=.o)
 
-HFILES = Engine.class.hpp Snake.class.hpp IGlib.class.hpp Map.class.hpp
+HFILES = Engine.class.hpp Snake.class.hpp IGlib.class.hpp Map.class.hpp \
+	IAlib.class.hpp
 
 HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 

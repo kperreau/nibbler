@@ -51,6 +51,13 @@ Engine::Engine(int width, int height, int nb_players, uint32_t difficulty)
 			);
 	}
 
+	// sounds file
+	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/music.wav", S_MUSIC));
+	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/ouh.wav", S_COLLISION));
+	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/piece.wav", S_EAT));
+	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/malus.wav", S_MALUS));
+	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/end.wav", S_END));
+
 	this->load_lib(this->_lib);
 	this->genFoods();
 	this->run();		// run the game
@@ -67,7 +74,6 @@ Engine::~Engine(void)
 {
 	if (!this->_listPlayers.empty())
 		this->_listPlayers.clear();
-	this->load_lib(None);
 	return ;
 }
 
@@ -187,7 +193,11 @@ void					Engine::getInputs(void)
 	for (auto it = keys.begin(); it != keys.end(); ++it)
 	{
 		if (std::get<0>(*it) == Exit)
+		{
+			delete this->_alib;
+			delete this->_glib;
 			exit (0);
+		}
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
 		if (duration > this->_speed * 1000000)
 		{
@@ -255,12 +265,45 @@ int						Engine::load_lib(input lib)
 	return (0);
 }
 
+
+void					Engine::end(void)
+{
+	std::cout << "Game over" << std::endl;
+	this->_alib->stop(S_MUSIC);
+	this->_alib->play(S_END);
+	usleep(4000000);
+	this->_alib->stop(S_END);
+	delete this->_alib;
+	delete this->_glib;
+	return ;
+}
+
 void					Engine::run(void)
 {
 	auto	time = Clock::now();
 	auto	oldtime = Clock::now();
 	long	duration = 0;
+	IAlib*	(*func_alib)();
+	char*	error;
+	void*	handle;
 
+	// lib audio
+	handle = dlopen("../mylib/audio/libaudio.dylib", RTLD_NOW|RTLD_GLOBAL);
+	if (!handle)
+	{
+		fputs (dlerror(), stderr);
+		exit(1);
+	}
+	*(void**)&(func_alib) = dlsym(handle, "getAlib");
+	if ((error = dlerror()) != NULL)
+	{
+		fputs(error, stderr);
+		exit(1);
+	}
+
+	this->_alib = func_alib();
+	this->_alib->init(this->_sounds);		// init audio
+	this->_alib->play(S_MUSIC);
 	while (1)
 	{
 		this->getInputs();
@@ -279,10 +322,11 @@ void					Engine::run(void)
 		this->genRocks();
 		if (this->_nbPlayersAlive < 1)
 		{
-			std::cout << "Game over" << std::endl;
-			return ;
+			this->end();
+			break ;
 		}
 	}
+	dlclose(handle);
 	return ;
 }
 
@@ -297,17 +341,20 @@ void					Engine::checkPlayers(void)
 		collision = this->checkCollision(std::get<0>(head), std::get<1>(head));
 		if (collision == 1)
 		{
+			this->_alib->play(S_COLLISION);
 			--this->_nbPlayersAlive;
 			(*it)->set_isAlive(0);
 		}
 		else if (collision == 3 && (*it)->get_elems().back() != head)
 		{
 			(*it)->move();
+			this->_alib->play(S_COLLISION);
 			--this->_nbPlayersAlive;
 			(*it)->set_isAlive(0);
 		}
 		else if (collision == 2)
 		{
+			this->_alib->play(S_EAT);
 			(*it)->move();
 			(*it)->eat();
 			this->genMalus();
@@ -317,6 +364,7 @@ void					Engine::checkPlayers(void)
 		}
 		else if (collision == 4)
 		{
+			this->_alib->play(S_MALUS);
 			(*it)->move();
 			(*it)->eatMalus();
 		}

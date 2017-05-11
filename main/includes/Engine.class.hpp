@@ -25,7 +25,9 @@
 # include <dlfcn.h>
 # include "Snake.class.hpp"
 # include "IGlib.class.hpp"
+# include "IAlib.class.hpp"
 # include "Map.class.hpp"
+# include <unistd.h>
 
 # define SQUARE 16
 
@@ -58,6 +60,7 @@ class Engine
 		void					genRocks(void);
 		void					genMalus(void);
 		void					getInputs(void);
+		void					end(void);
 		int						load_lib(input lib);
 		Engine &				operator=(Engine const & rhs);
 
@@ -71,11 +74,13 @@ class Engine
 		uint32_t					_difficulty;
 		long						_rate;
 		IGlib *						_glib;
+		IAlib *						_alib;
 		bool						_pause;
 		input						_lib;
 		int const					_color[4] = {0xff, 0xff00, 0xff0000};
 		std::list <Snake *>			_listPlayers;
 		Map							_map;
+		std::list <std::pair <std::string, e_sound> >	_sounds;
 		std::list <std::pair <int, int> >		_listFoods;
 		std::list <std::pair <int, int> >		_listRocks;
 		std::list <std::pair <int, int> >		_listMalus;

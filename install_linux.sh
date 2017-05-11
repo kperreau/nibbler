@@ -10,7 +10,7 @@ else
 	curl https://gitlab.peach-bun.com/pinion/SFML/commit/3383b4a472f0bd16a8161fb8760cd3e6333f1782.patch \
 	  | patch -p1
 	cmake .
-	make sfml-graphics
+	make
 	echo "\r\033[32;1m[SFML: install Complete]"
 	cd $PWD
 	echo "\033[32;1m[SFML: Done]\033[0m"
