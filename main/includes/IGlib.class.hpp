@@ -13,6 +13,7 @@
 #ifndef IGLIB_CLASS_HPP
 # define IGLIB_CLASS_HPP
 # include <iostream>
+# include <list>
 # include <string>
 
 enum	input {

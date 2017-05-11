@@ -15,19 +15,19 @@
 
 Glib::Glib()
 {
-	this->_input[0][SDL_SCANCODE_UP] = Top;
-	this->_input[0][SDL_SCANCODE_DOWN] = Bottom;
-	this->_input[0][SDL_SCANCODE_LEFT] = Left;
-	this->_input[0][SDL_SCANCODE_RIGHT] = Right;
-	this->_input[1][SDL_SCANCODE_W] = Top;
-	this->_input[1][SDL_SCANCODE_S] = Bottom;
-	this->_input[1][SDL_SCANCODE_A] = Left;
-	this->_input[1][SDL_SCANCODE_D] = Right;
-	this->_input[4][SDL_SCANCODE_ESCAPE] = Exit;
-	this->_input[4][SDL_SCANCODE_SPACE] = Pause;
-	this->_input[4][SDL_SCANCODE_F1] = F1;
-	this->_input[4][SDL_SCANCODE_F2] = F2;
-	this->_input[4][SDL_SCANCODE_F3] = F3;
+	this->_input[SDL_SCANCODE_UP] = std::pair<input, int>(Top, 0);
+	this->_input[SDL_SCANCODE_DOWN] = std::pair<input, int>(Bottom, 0);
+	this->_input[SDL_SCANCODE_LEFT] = std::pair<input, int>(Left, 0);
+	this->_input[SDL_SCANCODE_RIGHT] = std::pair<input, int>(Right, 0);
+	this->_input[SDL_SCANCODE_Z] = std::pair<input, int>(Top, 1);
+	this->_input[SDL_SCANCODE_S] = std::pair<input, int>(Bottom, 1);
+	this->_input[SDL_SCANCODE_Q] = std::pair<input, int>(Left, 1);
+	this->_input[SDL_SCANCODE_D] = std::pair<input, int>(Right, 1);
+	this->_input[SDL_SCANCODE_ESCAPE] = std::pair<input, int>(Exit, 4);
+	this->_input[SDL_SCANCODE_SPACE] = std::pair<input, int>(Pause, 4);
+	this->_input[SDL_SCANCODE_F1] = std::pair<input, int>(F1, 4);
+	this->_input[SDL_SCANCODE_F2] = std::pair<input, int>(F2, 4);
+	this->_input[SDL_SCANCODE_F3] = std::pair<input, int>(F3, 4);
 	return ;
 }
 
@@ -47,22 +47,19 @@ void			Glib::init(int width, int height, int square)
 	this->_width = width;
 	this->_height = height;
 	this->_square = square;
+
 	// Notre fenêtre
-	
     SDL_Window* fenetre(0);
-	
-    // Initialisation de la SDL
-	
+
+	// Initialisation de la SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
         SDL_Quit();
-		
         return ;
     }
 	
     // Création de la fenêtre
-	
     this->_window = SDL_CreateWindow("Nibbler SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     this->_renderer = SDL_CreateRenderer( this->_window, -1, SDL_RENDERER_ACCELERATED);
     this->_state = SDL_GetKeyboardState(NULL);
@@ -118,24 +115,26 @@ void			Glib::draw(int x, int y, int color)
 	return ;
 }
 
-input			Glib::getInput(int id)
+std::list <std::pair <input, int> >		Glib::getInput(int id)
 {
-	SDL_Event evenements;
-	while (SDL_PollEvent(&evenements) == 1)
+	SDL_Event								event;
+	std::list <std::pair <input, int> >		keys;
+
+	while (SDL_PollEvent(&event) == 1)
 	{
-		if (evenements.type == SDL_WINDOWEVENT && evenements.window.event == SDL_WINDOWEVENT_CLOSE) {
+		if (event.type == SDL_WINDOWEVENT
+			&& event.window.event == SDL_WINDOWEVENT_CLOSE)
+		{
 			SDL_DestroyWindow(this->_window);
 			SDL_Quit();
-			return (Exit);
+			keys.push_front(std::pair<input, int>(Exit, 4));
 		}
+		else if (event.type == SDL_KEYDOWN
+			&& this->_input.count(event.key.keysym.scancode))
+			keys.push_front(this->_input.at(event.key.keysym.scancode));
 	}
-	SDL_PumpEvents();
-	for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
-	{
-		if (this->_state[it->first])
-			return (it->second);
-	}
-	return (None);
+	//SDL_PumpEvents();
+	return (keys);
 }
 
 /*IGlib &			Glib::operator=(IGlib const & rhd)

@@ -15,19 +15,19 @@
 
 Glib::Glib()
 {
-	this->_input[0][GLFW_KEY_UP] = Top;
-	this->_input[0][GLFW_KEY_DOWN] = Bottom;
-	this->_input[0][GLFW_KEY_LEFT] = Left;
-	this->_input[0][GLFW_KEY_RIGHT] = Right;
-	this->_input[1][GLFW_KEY_W] = Top;
-	this->_input[1][GLFW_KEY_S] = Bottom;
-	this->_input[1][GLFW_KEY_A] = Left;
-	this->_input[1][GLFW_KEY_D] = Right;
-	this->_input[4][GLFW_KEY_ESCAPE] = Exit;
-	this->_input[4][GLFW_KEY_SPACE] = Pause;
-	this->_input[4][GLFW_KEY_F1] = F1;
-	this->_input[4][GLFW_KEY_F2] = F2;
-	this->_input[4][GLFW_KEY_F3] = F3;
+	this->_input[GLFW_KEY_UP] = std::pair<input, int>(Top, 0);
+	this->_input[GLFW_KEY_DOWN] = std::pair<input, int>(Bottom, 0);
+	this->_input[GLFW_KEY_LEFT] = std::pair<input, int>(Left, 0);
+	this->_input[GLFW_KEY_RIGHT] = std::pair<input, int>(Right, 0);
+	this->_input[GLFW_KEY_Z] = std::pair<input, int>(Top, 1);
+	this->_input[GLFW_KEY_S] = std::pair<input, int>(Bottom, 1);
+	this->_input[GLFW_KEY_Q] = std::pair<input, int>(Left, 1);
+	this->_input[GLFW_KEY_D] = std::pair<input, int>(Right, 1);
+	this->_input[GLFW_KEY_ESCAPE] = std::pair<input, int>(Exit, 4);
+	this->_input[GLFW_KEY_SPACE] = std::pair<input, int>(Pause, 4);
+	this->_input[GLFW_KEY_F1] = std::pair<input, int>(F1, 4);
+	this->_input[GLFW_KEY_F2] = std::pair<input, int>(F2, 4);
+	this->_input[GLFW_KEY_F3] = std::pair<input, int>(F3, 4);
 	return ;
 }
 
@@ -59,6 +59,7 @@ void			Glib::init(int width, int height, int square)
         glfwTerminate();
         return ;
     }
+	//glfwSetKeyCallback(this->_window, &Glib::keyCallBack);
 	//glEnable(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glfwMakeContextCurrent(this->_window);
 	glfwSwapInterval(1);
@@ -128,19 +129,53 @@ void			Glib::draw(int x, int y, int color)
 	return ;
 }
 
-input			Glib::getInput(int id)
+/*void		Glib::keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (glfwWindowShouldClose(this->_window)) {
+	static std::list <std::pair <input, int> >		keys;
+
+	if (action == GLFW_PRESS
+		&& this->_input.count(key))
+		this->_pollKeys.push_front(this->_input.at(key));
+	return ;
+}
+
+std::list <std::pair <input, int> >		Glib::getInput(int id)
+{
+	std::list <std::pair <input, int> >		keys = this->_pollKeys;
+
+	if (glfwWindowShouldClose(this->_window))
+	{
 		glfwDestroyWindow(this->_window);
 		glfwTerminate();
-		return (Exit);
+		keys.push_front(std::pair<input, int>(Exit, 4));
 	}
-	for (auto it = this->_input[id].begin(); it != this->_input[id].end(); ++it)
+	for (auto it = pollKeys.begin(); it != pollKeys.end(); ++it)
 	{
-		if (glfwGetKey(this->_window, it->first) == GLFW_PRESS)
-			return (it->second);
+		if (this->_input.count(key))
+			keys.push_front(this->_input.at(*it));
 	}
-	return (None);
+	pollKeys.clear();
+	return (keys);
+}*/
+
+std::list <std::pair <input, int> >		Glib::getInput(int id)
+{
+	std::list <std::pair <input, int> >		keys;
+	int		state;
+
+	if (glfwWindowShouldClose(this->_window))
+	{
+		glfwDestroyWindow(this->_window);
+		glfwTerminate();
+		keys.push_front(std::pair<input, int>(Exit, 4));
+	}
+	for (auto it = this->_input.begin(); it != this->_input.end(); ++it)
+	{
+		state = glfwGetKey(this->_window, (*it).first);
+		if (state == GLFW_PRESS)
+			keys.push_front((*it).second);
+	}
+	return (keys);
 }
 
 /*IGlib &			Glib::operator=(IGlib const & rhd)

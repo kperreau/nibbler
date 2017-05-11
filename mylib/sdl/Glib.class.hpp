@@ -17,6 +17,7 @@
 # include <ctime>
 # include <sstream>
 # include <map>
+# include <list>
 # include <../../main/includes/IGlib.class.hpp>
 # include <SDL.h>
 
@@ -33,7 +34,7 @@ class Glib : public IGlib
 		void					clear(void);
 		void					exit(void);
 		void					draw(int x, int y, int color);
-		input					getInput(int id);
+		std::list <std::pair <input, int> >		getInput(int id);
 		int						getColor(int color, int type);
 		void					drawSqure(int x, int y);
 
@@ -44,7 +45,7 @@ class Glib : public IGlib
 		int							_square;
 		SDL_Window*					_window;
 		SDL_Renderer*				_renderer;
-		std::map<int, std::map<int, input> >		_input;
+		std::map<int, std::pair<input, int> >		_input;
 };
 
 //std::ostream &		operator<<(std::ostream & o, Glib const & i);

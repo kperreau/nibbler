@@ -17,6 +17,7 @@
 # include <ctime>
 # include <sstream>
 # include <map>
+# include <list>
 # include <../../main/includes/IGlib.class.hpp>
 # include <GLFW/glfw3.h>
 
@@ -33,7 +34,7 @@ class Glib : public IGlib
 		void					clear(void);
 		void					exit(void);
 		void					draw(int x, int y, int color);
-		input					getInput(int id);
+		std::list <std::pair <input, int> >		getInput(int id);
 		int						getColor(int color, int type);
 
 	private:
@@ -41,7 +42,7 @@ class Glib : public IGlib
 		int							_height;
 		int							_square;
 		GLFWwindow*					_window;
-		std::map<int, std::map<int, input> >		_input;
+		std::map<int, std::pair<input, int> >	_input;;
 };
 
 //std::ostream &		operator<<(std::ostream & o, Glib const & i);
