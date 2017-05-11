@@ -229,6 +229,7 @@ int						Engine::load_lib(input lib)
 	if (handle != NULL)
 	{
 		this->_glib->exit();
+		delete this->_glib;
 		dlclose(handle);
 	}
 	if (lib == None)
