@@ -36,6 +36,7 @@ class Glib : public IGlib
 		void					draw(int x, int y, int color);
 		std::list <std::pair <input, int> >		getInput(int id);
 		int						getColor(int color, int type);
+		void					centerWindow(void);
 
 	private:
 		int							_width;
