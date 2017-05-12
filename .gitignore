@@ -3,4 +3,5 @@ glib
 .DS_Store
 *.o
 .*
-.dylib
+*.dylib
+Nibbler

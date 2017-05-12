@@ -59,12 +59,13 @@ void			Glib::init(int width, int height, int square)
         glfwTerminate();
         return ;
     }
-	//glfwSetKeyCallback(this->_window, &Glib::keyCallBack);
-	//glEnable(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glfwMakeContextCurrent(this->_window);
-	glfwSwapInterval(1);
-	//glfwGetFramebufferSize(this->_window, &this->_width, &this->_height);
-	//glViewport(0, 0, this->_width, this->height);
+
+    glfwMakeContextCurrent(this->_window);
+
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0.0f, width, height, 0.0f, 0.0f, 1.0f);
 	return ;
 }
 
@@ -82,13 +83,9 @@ void			Glib::exit(void)
 
 void			Glib::display(void)
 {
-	glfwGetFramebufferSize(this->_window, &this->_width, &this->_height);
-	glViewport(0, 0, this->_width, this->_height);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glfwPollEvents();
 	glfwSwapBuffers(this->_window);
-	//glfwGetFramebufferSize(this->_window, &this->_width, &this->_height);
-    //glViewport(0, 0, this->_width, this->_height);
+	glfwPollEvents();
+	glClear(GL_COLOR_BUFFER_BIT);
 	return ;
 }
 
@@ -104,28 +101,24 @@ int			Glib::getColor(int color, int type)
 
 void			Glib::draw(int x, int y, int color)
 {
-
-	//glColor3f(1.0F,1.0F,1.0F);
-	/*glOrtho(-1.0,1.0,-1.0,1.0,-1.0,1.0) ;
-	glBegin(GL_POLYGON) ;
-	glVertex2f(-0.5F,-0.5F) ;
-	glVertex2f(-0.5F,0.5F) ;
-	glVertex2f(0.5F,0.5F) ;
-	glVertex2f(0.5F,-0.5F) ;*/
-
-	/*glClear(GL_COLOR_BUFFER_BIT);
-	glTranslatef(0.0f,0.0f,-6.0f);  
-	const GLfloat quadVertices[] = { -1.0f, 1.0f, 0.0f, 
-			1.0f, 1.0f, 0.0f, 
-			1.0f,-1.0f, 0.0f,
-			-1.0f,-1.0f, 0.0f
-		}; 
-
-	glVertexPointer(3, GL_FLOAT, 0, quadVertices);
-	glDrawArrays(GL_QUADS, 0, 4);
-	glEnd() ;
-	//glFlush() ;
-	*/
+	x *= this->_square;
+	y *= this->_square;
+	int tx = x - 1;
+    int ty = y - 1;
+	glColor3ub(0xff, 0xff, 0xff);
+	glBegin(GL_QUADS);
+		glVertex2f((GLfloat)tx, (GLfloat)ty);
+		glVertex2f((GLfloat)tx + this->_square + 2, (GLfloat)ty);
+		glVertex2f((GLfloat)tx + this->_square + 2, (GLfloat)ty + this->_square + 2);
+		glVertex2f((GLfloat)tx, (GLfloat)ty + this->_square + 2);
+	glEnd();
+	glColor3ub(this->getColor(color, 0), this->getColor(color, 1), this->getColor(color, 2));
+	glBegin(GL_QUADS);
+		glVertex2f((GLfloat)x, (GLfloat)y);
+		glVertex2f((GLfloat)x + this->_square, (GLfloat)y);
+		glVertex2f((GLfloat)x + this->_square, (GLfloat)y + this->_square);
+		glVertex2f((GLfloat)x, (GLfloat)y + this->_square);
+	glEnd();
 	return ;
 }
 
