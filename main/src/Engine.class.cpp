@@ -212,6 +212,8 @@ void					Engine::getInputs(void)
 		if (this->_pause) {
 			this->_glib->write("PAUSE", 0xffffff);
 			return ;
+		} else {
+			this->_glib->write("", 0xffffff);
 		}
 		if (std::get<0>(*it) >= Left && std::get<0>(*it) <= Bottom)
 		{

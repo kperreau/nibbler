@@ -42,6 +42,8 @@ class Glib : public IGlib
 		int							_height;
 		int							_square;
 		sf::RenderWindow			_window;
+		sf::Font					_font;
+		sf::Text					_text;
 		std::map<int, std::pair<input, int>>		_input;
 };
 

@@ -49,6 +49,12 @@ void				Glib::init(int width, int height, int square)
 	this->_square = square;
 	this->_window.create(sf::VideoMode(width, height), "Nibbler SFML");
 	this->_window.setPosition(sf::Vector2i((sf::VideoMode::getDesktopMode().width/2)-(width/2), (sf::VideoMode::getDesktopMode().height/2)-(height/2)));
+
+	this->_font.loadFromFile("data/arial.ttf");
+	this->_text.setFont(this->_font); // font est un sf::Font
+	this->_text.setCharacterSize(24); // exprimée en pixels, pas en points !
+	this->_text.setString("");
+	this->_text.setPosition(width/2, height/2);
 	return ;
 }
 
@@ -61,6 +67,7 @@ void			Glib::display(void)
 {
 	if (this->_window.isOpen())
 	{
+		this->_window.draw(this->_text);
 		this->_window.display();
 		this->_window.clear();
 	}
@@ -113,27 +120,12 @@ void			Glib::draw(int x, int y, int color)
 
 void			Glib::write(std::string str, int color)
 {
-	sf::Font font;
-	if (!font.loadFromFile("data/arial.ttf")) {
-		sf::Text text;
-
-		// choix de la police à utiliser
-		text.setFont(font); // font est un sf::Font
-
-		// choix de la chaîne de caractères à afficher
-		text.setString(str);
-
-		// choix de la taille des caractères
-		text.setCharacterSize(24); // exprimée en pixels, pas en points !
-
-		// choix de la couleur du texte
-		text.setColor(sf::Color(
-				  this->getColor(color, 0)
-				, this->getColor(color, 1)
-				, this->getColor(color, 2)
-				));
-		this->_window.draw(text);
-	}
+	this->_text.setString(str);
+	this->_text.setFillColor(sf::Color(
+			  this->getColor(color, 0)
+			, this->getColor(color, 1)
+			, this->getColor(color, 2)
+			));
 }
 
 std::list <std::pair <input, int> >			Glib::getInput(int id)
