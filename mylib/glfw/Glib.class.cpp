@@ -42,6 +42,21 @@ Glib::Glib(Glib const & src)
 	return ;
 }
 
+static std::list <int> &		glfw_singleton()
+{
+	static std::list <int>		keys;
+	return (keys);
+}
+
+void		keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	std::list <int> &		keys = glfw_singleton();
+
+	if (action == GLFW_PRESS)
+		keys.push_back(key);
+	return ;
+}
+
 void			Glib::init(int width, int height, int square)
 {
 	this->_width = width;
@@ -52,7 +67,6 @@ void			Glib::init(int width, int height, int square)
         return ;
 
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-
     this->_window = glfwCreateWindow(width, height, "Nibbler GLFW", NULL, NULL);
     if (!this->_window)
     {
@@ -61,7 +75,7 @@ void			Glib::init(int width, int height, int square)
     }
 
     glfwMakeContextCurrent(this->_window);
-
+	glfwSetKeyCallback(this->_window, keyCallBack);
     this->centerWindow();
 
 	glMatrixMode(GL_PROJECTION);
@@ -193,19 +207,11 @@ void			Glib::write(std::string str, int color)
 
 }
 
-/*void		Glib::keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	static std::list <std::pair <input, int> >		keys;
-
-	if (action == GLFW_PRESS
-		&& this->_input.count(key))
-		this->_pollKeys.push_front(this->_input.at(key));
-	return ;
-}
-
 std::list <std::pair <input, int> >		Glib::getInput(int id)
 {
-	std::list <std::pair <input, int> >		keys = this->_pollKeys;
+	std::list <std::pair <input, int> >		keys;
+	std::list <int> &						pollKeys = glfw_singleton();
+	int		state;
 
 	if (glfwWindowShouldClose(this->_window))
 	{
@@ -215,38 +221,12 @@ std::list <std::pair <input, int> >		Glib::getInput(int id)
 	}
 	for (auto it = pollKeys.begin(); it != pollKeys.end(); ++it)
 	{
-		if (this->_input.count(key))
+		if (this->_input.count((*it)))
 			keys.push_front(this->_input.at(*it));
-	}
-	pollKeys.clear();
-	return (keys);
-}*/
-
-std::list <std::pair <input, int> >		Glib::getInput(int id)
-{
-	std::list <std::pair <input, int> >		keys;
-	int		state;
-
-	if (glfwWindowShouldClose(this->_window))
-	{
-		glfwDestroyWindow(this->_window);
-		glfwTerminate();
-		keys.push_front(std::pair<input, int>(Exit, 4));
-	}
-	for (auto it = this->_input.begin(); it != this->_input.end(); ++it)
-	{
-		state = glfwGetKey(this->_window, (*it).first);
-		if (state == GLFW_PRESS)
-			keys.push_front((*it).second);
+		it = pollKeys.erase(it);
 	}
 	return (keys);
 }
-
-/*IGlib &			Glib::operator=(IGlib const & rhd)
-{
-	return (*this);
-}
-*/
 
 extern "C" Glib *		getGlib()
 {
