@@ -120,6 +120,15 @@ std::pair <int, int>	Snake::next_move(void)
 	std::pair <int, int>	head;
 	input					nextDir = this->_dir;
 
+	if (this->_malus > 0)
+	{
+		if (this->_nextDir.front() == Left)
+			this->_nextDir.front() = Right;
+		else if (this->_nextDir.front() == Right)
+			this->_nextDir.front() = Left;
+		--this->_malus;
+	}
+
 	if (this->_nextDir.front() != None
 		&& this->checkDir(this->_nextDir.front()) == 1)
 		nextDir = this->_nextDir.front();
