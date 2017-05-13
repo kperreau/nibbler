@@ -340,37 +340,42 @@ void					Engine::checkPlayers(void)
 	{
 		head = (*it)->next_move();
 		collision = this->checkCollision(std::get<0>(head), std::get<1>(head));
-		if (collision == 1)
+		switch (collision)
 		{
-			this->_alib->play(S_COLLISION);
-			--this->_nbPlayersAlive;
-			(*it)->set_isAlive(0);
+			case CELL_BORDER:
+			case CELL_ROCK:
+				this->_alib->play(S_COLLISION);
+				--this->_nbPlayersAlive;
+				(*it)->set_isAlive(0);
+				break ;
+			case CELL_SNAKE:
+				if ((*it)->get_elems().back() != head)
+				{
+					(*it)->move();
+					this->_alib->play(S_COLLISION);
+					--this->_nbPlayersAlive;
+					(*it)->set_isAlive(0);
+				}
+				else
+					(*it)->move();
+				break ;
+			case CELL_FOOD:
+				this->_alib->play(S_EAT);
+				(*it)->move();
+				(*it)->eat();
+				this->genMalus();
+				++this->_score;
+				if (this->_difficulty > 1 && this->_speed > 50)
+					this->_speed -= 2;
+				break ;
+			case CELL_MALUS:
+				this->_alib->play(S_MALUS);
+				(*it)->move();
+				(*it)->eatMalus();
+				break ;
+			default:
+				(*it)->move();
 		}
-		else if (collision == 3 && (*it)->get_elems().back() != head)
-		{
-			(*it)->move();
-			this->_alib->play(S_COLLISION);
-			--this->_nbPlayersAlive;
-			(*it)->set_isAlive(0);
-		}
-		else if (collision == 2)
-		{
-			this->_alib->play(S_EAT);
-			(*it)->move();
-			(*it)->eat();
-			this->genMalus();
-			++this->_score;
-			if (this->_difficulty > 1 && this->_speed > 50)
-				this->_speed -= 2;
-		}
-		else if (collision == 4)
-		{
-			this->_alib->play(S_MALUS);
-			(*it)->move();
-			(*it)->eatMalus();
-		}
-		else
-			(*it)->move();
 	}
 	
 	for (auto it = this->_listPlayers.begin(); it != this->_listPlayers.end(); ++it)
@@ -384,39 +389,40 @@ void					Engine::checkPlayers(void)
 	return ;
 }
 
-int						Engine::checkCollision(int x, int y)
+cell					Engine::checkCollision(int x, int y)
 {
+	cell					c_cell;
+	std::pair <int, int>	head(x, y);
+	std::list<std::pair <int, int> >::iterator		it;
+
 	if (x >= this->get_game_width()
 		|| y >= this->get_game_height()
 		|| x < 0 || y < 0)
-		return (1);
+		return (CELL_BORDER);
 
-	if (this->_map.getCell(x, y) == CELL_SNAKE)
-		return (3);
-	if (this->_map.getCell(x, y) == CELL_ROCK)
-		return (1);
-	if (this->_map.getCell(x, y) == CELL_MALUS)
+	c_cell = this->_map.getCell(x, y);
+	switch (c_cell)
 	{
-		std::pair <int, int>	head(x, y);
-		auto it = std::find(this->_listMalus.begin(), this->_listMalus.end(), head);
-		if (it != this->_listMalus.end())
-		{
-			this->_listMalus.erase(it);
-			return (4);
-		}
+		case CELL_MALUS:
+			it = std::find(this->_listMalus.begin(), this->_listMalus.end(), head);
+			if (it != this->_listMalus.end())
+			{
+				this->_listMalus.erase(it);
+				return (CELL_MALUS);
+			}
+			break ;
+		case CELL_FOOD:
+			it = std::find(this->_listFoods.begin(), this->_listFoods.end(), head);
+			if (it != this->_listFoods.end())
+			{
+				this->_listFoods.erase(it);
+				return (CELL_FOOD);
+			}
+			break ;
+		default:
+			return (c_cell);
 	}
-
-	if (this->_map.getCell(x, y) == CELL_FOOD)
-	{
-		std::pair <int, int>	head(x, y);
-		auto it = std::find(this->_listFoods.begin(), this->_listFoods.end(), head);
-		if (it != this->_listFoods.end())
-		{
-			this->_listFoods.erase(it);
-			return (2);
-		}
-	}
-	return (0);
+	return (CELL_DEFAULT);
 }
 
 long					Engine::getRate(void) const
