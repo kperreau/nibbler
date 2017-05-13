@@ -188,6 +188,11 @@ void			Glib::draw(int x, int y, int color)
 	return ;
 }
 
+void			Glib::write(std::string str, int color)
+{
+
+}
+
 /*void		Glib::keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	static std::list <std::pair <input, int> >		keys;

@@ -209,8 +209,10 @@ void					Engine::getInputs(void)
 		}
 		if (std::get<0>(*it) >= F1 && std::get<0>(*it) <= F3)
 			this->load_lib(std::get<0>(*it));
-		if (this->_pause)
+		if (this->_pause) {
+			this->_glib->write("PAUSE", 0xffffff);
 			return ;
+		}
 		if (std::get<0>(*it) >= Left && std::get<0>(*it) <= Bottom)
 		{
 			Snake * p = this->get_player_by_id(std::get<1>(*it));

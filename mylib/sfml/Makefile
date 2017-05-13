@@ -29,7 +29,7 @@ ERRORFLAGS = # -Wall -Werror -Wextra
 
 INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/sfml/include/
 
-LIBFLAGS = -L../../glib/sfml/lib/ -lsfml-system -lsfml-window -lsfml-graphics \
+LIBFLAGS = -L../../glib/sfml/lib/ -lsfml-system -lsfml-window -lsfml-graphics
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) -std=c++11 -O2
 

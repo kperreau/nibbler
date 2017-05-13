@@ -115,6 +115,11 @@ void			Glib::draw(int x, int y, int color)
 	return ;
 }
 
+void			Glib::write(std::string str, int color)
+{
+
+}
+
 std::list <std::pair <input, int> >		Glib::getInput(int id)
 {
 	SDL_Event								event;

@@ -111,6 +111,31 @@ void			Glib::draw(int x, int y, int color)
 	return ;
 }
 
+void			Glib::write(std::string str, int color)
+{
+	sf::Font font;
+	if (!font.loadFromFile("data/arial.ttf")) {
+		sf::Text text;
+
+		// choix de la police à utiliser
+		text.setFont(font); // font est un sf::Font
+
+		// choix de la chaîne de caractères à afficher
+		text.setString(str);
+
+		// choix de la taille des caractères
+		text.setCharacterSize(24); // exprimée en pixels, pas en points !
+
+		// choix de la couleur du texte
+		text.setColor(sf::Color(
+				  this->getColor(color, 0)
+				, this->getColor(color, 1)
+				, this->getColor(color, 2)
+				));
+		this->_window.draw(text);
+	}
+}
+
 std::list <std::pair <input, int> >			Glib::getInput(int id)
 {
 	std::list <std::pair <input, int> >	keys;

@@ -34,6 +34,7 @@ class Glib : public IGlib
 		void					clear(void);
 		void					exit(void);
 		void					draw(int x, int y, int color);
+		void					write(std::string str, int color);
 		std::list <std::pair <input, int> >		getInput(int id);
 		int						getColor(int color, int type);
 		void					centerWindow(void);
