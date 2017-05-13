@@ -29,7 +29,7 @@ ERRORFLAGS = # -Wall -Werror -Wextra
 
 INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/glfw/include/
 
-LIBFLAGS = -L../../glib/glfw/lib/ -lGLFW -framework OpenGL
+LIBFLAGS = -L../../glib/glfw/lib/ -lglfw #-framework OpenGL
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) -std=c++11 -O2
 
