@@ -54,7 +54,6 @@ void				Glib::init(int width, int height, int square)
 	this->_text.setFont(this->_font); // font est un sf::Font
 	this->_text.setCharacterSize(24); // exprimée en pixels, pas en points !
 	this->_text.setString("");
-	this->_text.setPosition(width/2, height/2);
 	return ;
 }
 
@@ -126,6 +125,9 @@ void			Glib::write(std::string str, int color)
 			, this->getColor(color, 1)
 			, this->getColor(color, 2)
 			));
+	sf::FloatRect textRect = this->_text.getLocalBounds();
+	this->_text.setOrigin(textRect.left + textRect.width/2.0f, textRect.top + textRect.height/2.0f);
+	this->_text.setPosition(sf::Vector2f(this->_width/2.0f, this->_height/2.0f));
 }
 
 std::list <std::pair <input, int> >			Glib::getInput(int id)
