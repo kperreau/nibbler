@@ -30,6 +30,7 @@ else
 	./configure --prefix=$C_PATH/glib/sdl
 	make
 	make install-lib
+	make install-hdrs
 	echo "\r\033[32;1m[SDL: install Complete]"
 	cd $C_PATH
 	echo "\033[32;1m[SDL: Done]\033[0m"
@@ -47,9 +48,9 @@ else
 	cd glib/sdl_ttf
 	echo "\033[33m[SDL_TTF: install]\c\n"
 	export SDL2_CONFIG=$C_PATH/glib/sdl/sdl2-config
-	./configure --with-sdl-prefix=$C_PATH/glib/sdl
+	./configure --with-sdl-prefix=$C_PATH/glib/sdl --exec-prefix=$C_PATH/glib/sdl_ttf --prefix=$C_PATH/glib/sdl_ttf
 	make
-	make install-lib
+	make install
 	echo "\r\033[32;1m[SDL_TTF: install Complete]"
 	cd $C_PATH
 	echo "\033[32;1m[SDL_TTF: Done]\033[0m"
