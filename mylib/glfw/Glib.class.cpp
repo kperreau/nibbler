@@ -6,14 +6,14 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 19:12:39 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 20:56:00 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Glib.class.hpp"
 #include <iostream>
 
-Glib::Glib()
+Glib::Glib() : _texture(false)
 {
 	this->_input[GLFW_KEY_UP] = std::pair<input, int>(Top, 0);
 	this->_input[GLFW_KEY_DOWN] = std::pair<input, int>(Bottom, 0);
@@ -81,6 +81,12 @@ void			Glib::init(int width, int height, int square)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0.0f, width, height, 0.0f, 0.0f, 1.0f);
+	return ;
+}
+
+void			Glib::setTexture(void)
+{
+	this->_texture = !this->_texture;
 	return ;
 }
 
@@ -179,8 +185,11 @@ int			Glib::getColor(int color, int type)
 	return ((color >> (type * 8)) & 0xff);
 }
 
-void			Glib::draw(int x, int y, int color)
+void			Glib::draw(int x, int y, int color, cell c)
 {
+	if (c == CELL_DEFAULT)
+		return ;
+
 	x *= this->_square;
 	y *= this->_square;
 	int tx = x - 1;

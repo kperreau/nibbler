@@ -6,14 +6,14 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 15:07:36 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 20:56:29 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Glib.class.hpp"
 #include <iostream>
 
-Glib::Glib()
+Glib::Glib() : _texture(false)
 {
 	this->_input[SDL_SCANCODE_UP] = std::pair<input, int>(Top, 0);
 	this->_input[SDL_SCANCODE_DOWN] = std::pair<input, int>(Bottom, 0);
@@ -66,6 +66,12 @@ void			Glib::init(int width, int height, int square)
 	return ;
 }
 
+void			Glib::setTexture(void)
+{
+	this->_texture = !this->_texture;
+	return ;
+}
+
 SDL_Window*		Glib::getWindow(void)
 {
 	return (this->_window);
@@ -97,9 +103,13 @@ int			Glib::getColor(int color, int type)
 	return ((color >> (type * 8)) & 0xff);
 }
 
-void			Glib::draw(int x, int y, int color)
+void			Glib::draw(int x, int y, int color, cell c)
 {
-	SDL_Rect r;
+	SDL_Rect	r;
+
+	if (c == CELL_DEFAULT)
+		return ;
+
     r.x = x * this->_square;
     r.y = y * this->_square;
     r.w = this->_square;

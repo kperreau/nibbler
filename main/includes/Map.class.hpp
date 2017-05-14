@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:32 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/05 21:19:57 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 19:21:05 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,7 @@
 # include <cstdint>
 # include <utility>
 # include <vector>
-
-enum	cell {
-	CELL_DEFAULT,
-	CELL_SNAKE,
-	CELL_FOOD,
-	CELL_ROCK,
-	CELL_MALUS,
-	CELL_BORDER
-};
+# include "Nibbler.hpp"
 
 class Map
 {

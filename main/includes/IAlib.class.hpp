@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:42:47 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 19:20:40 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,7 @@
 # include <iostream>
 # include <list>
 # include <string>
-
-enum e_sound
-{
-	S_COLLISION,
-	S_EAT,
-	S_MALUS,
-	S_MUSIC,
-	S_END
-};
+# include "Nibbler.hpp"
 
 class IAlib
 {

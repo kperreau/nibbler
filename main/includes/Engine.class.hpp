@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:29:59 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 19:39:10 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ class Engine
 		void					drawFoods(void);
 		void					drawRocks(void);
 		void					drawMalus(void);
+		void					drawDefault(void);
+		void					drawText(void);
 		void					resetMap(void);
 		void					genFoods(void);
 		void					genRocks(void);

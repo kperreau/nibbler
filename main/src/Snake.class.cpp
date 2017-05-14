@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:29:05 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 18:37:12 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 20:20:47 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,10 +179,10 @@ void			Snake::move(void)
 	}
 
 	this->_last = this->_elems.back();
-	this->map.delEmptyCell(head);
 	this->map.getEmptyCells().push_back(this->_last);
-	this->map.setCell(std::get<0>(head), std::get<1>(head), CELL_SNAKE);
+	this->map.delEmptyCell(head);
 	this->map.setCell(std::get<0>(this->_last), std::get<1>(this->_last), CELL_DEFAULT);
+	this->map.setCell(std::get<0>(head), std::get<1>(head), CELL_SNAKE);
 	this->_elems.pop_back();
 	this->_elems.push_front(head);
 	return ;

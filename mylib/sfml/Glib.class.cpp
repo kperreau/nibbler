@@ -6,15 +6,18 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 19:24:59 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 20:50:14 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Glib.class.hpp"
 #include <iostream>
 
-Glib::Glib()
+Glib::Glib() : _texture(false)
 {
+	sf::Texture		texture;
+
+	// input
 	this->_input[sf::Keyboard::Up] = std::pair<input, int>(Top, 0);
 	this->_input[sf::Keyboard::Down] = std::pair<input, int>(Bottom, 0);
 	this->_input[sf::Keyboard::Left] = std::pair<input, int>(Left, 0);
@@ -28,6 +31,20 @@ Glib::Glib()
 	this->_input[sf::Keyboard::F1] = std::pair<input, int>(F1, 4);
 	this->_input[sf::Keyboard::F2] = std::pair<input, int>(F2, 4);
 	this->_input[sf::Keyboard::F3] = std::pair<input, int>(F3, 4);
+	this->_input[sf::Keyboard::F4] = std::pair<input, int>(F4, 4);
+
+	// textures
+	texture.setSmooth(true);
+	texture.loadFromFile("./data/malus.png");
+	this->_textures[CELL_MALUS] = texture;
+	texture.loadFromFile("./data/burger.png");
+	this->_textures[CELL_FOOD] = texture;
+	texture.loadFromFile("./data/rock.png");
+	this->_textures[CELL_ROCK] = texture;
+	texture.loadFromFile("./data/grass.png");
+	this->_textures[CELL_DEFAULT] = texture;
+	texture.loadFromFile("./data/snake.png");
+	this->_textures[CELL_SNAKE] = texture;
 	return ;
 }
 
@@ -73,6 +90,12 @@ void			Glib::display(void)
 	return ;
 }
 
+void			Glib::setTexture(void)
+{
+	this->_texture = !this->_texture;
+	return ;
+}
+
 void			Glib::clear(void)
 {
 	if (this->_window.isOpen())
@@ -91,28 +114,59 @@ int			Glib::getColor(int color, int type)
 	return ((color >> (type * 8)) & 0xff);
 }
 
-void			Glib::draw(int x, int y, int color)
+void			Glib::draw(int x, int y, int color, cell c)
 {
 	if (this->_window.isOpen())
 	{
-		sf::RectangleShape rectangle(sf::Vector2f(this->_square, this->_square));
-		rectangle.setFillColor(
-			sf::Color(
-				  this->getColor(color, 0)
-				, this->getColor(color, 1)
-				, this->getColor(color, 2)
-				)
-			);
-		rectangle.setOutlineThickness(1);
-		rectangle.setOutlineColor(
-			sf::Color(
-				  0xff
-				, 0xff
-				, 0xff
-				)
-			);
-		rectangle.setPosition(x * this->_square, y * this->_square);
-		this->_window.draw(rectangle);
+		if (this->_texture == 0)
+		{
+			if (c == CELL_DEFAULT)
+				return ;
+			sf::RectangleShape rectangle(sf::Vector2f(this->_square, this->_square));
+			rectangle.setFillColor(
+				sf::Color(
+					  this->getColor(color, 0)
+					, this->getColor(color, 1)
+					, this->getColor(color, 2)
+					)
+				);
+			rectangle.setOutlineThickness(1);
+			rectangle.setOutlineColor(
+				sf::Color(
+					  0xff
+					, 0xff
+					, 0xff
+					)
+				);
+			rectangle.setPosition(x * this->_square, y * this->_square);
+			this->_window.draw(rectangle);
+		}
+		else
+		{
+			sf::Sprite	rectangle;
+			if (c == CELL_SNAKE)
+			{
+				rectangle.setColor(
+					sf::Color(
+						  this->getColor(color, 0)
+						, this->getColor(color, 1)
+						, this->getColor(color, 2)
+						)
+					);
+			}
+			rectangle.setTexture(this->_textures[c]);
+
+			if (c != CELL_DEFAULT)
+			{
+				sf::Sprite	rectangle2;
+				rectangle2.setTexture((this->_textures[CELL_DEFAULT]));
+				rectangle2.setPosition(x * this->_square, y * this->_square);
+				this->_window.draw(rectangle2);
+			}
+			rectangle.setPosition(x * this->_square, y * this->_square);
+			this->_window.draw(rectangle);
+		}
+
 	}
 	return ;
 }
@@ -134,7 +188,6 @@ std::list <std::pair <input, int> >			Glib::getInput(int id)
 {
 	std::list <std::pair <input, int> >	keys;
 	sf::Event			event;
-
 
 	while (this->_window.pollEvent(event))
 	{

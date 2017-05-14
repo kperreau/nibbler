@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:24:09 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 14:43:01 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 19:44:33 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ class Glib : public IGlib
 		void					init(int width, int height, int square);
 		void					clear(void);
 		void					exit(void);
-		void					draw(int x, int y, int color);
+		void					setTexture(void);
+		void					draw(int x, int y, int color, cell c);
 		void					write(std::string str, int color);
 		std::list <std::pair <input, int> >		getInput(int id);
 		int						getColor(int color, int type);
@@ -45,6 +46,8 @@ class Glib : public IGlib
 		sf::Font					_font;
 		sf::Text					_text;
 		std::map<int, std::pair<input, int>>		_input;
+		std::map<cell, sf::Texture>	_textures;
+		bool						_texture;
 };
 
 //std::ostream &		operator<<(std::ostream & o, Glib const & i);

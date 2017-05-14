@@ -6,7 +6,7 @@
 /*   By: kperreau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/16 18:20:49 by kperreau          #+#    #+#             */
-/*   Updated: 2017/05/08 18:40:52 by kperreau         ###   ########.fr       */
+/*   Updated: 2017/05/14 19:51:06 by kperreau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void					Engine::drawPlayers(void)
 				color /= 2;
 			if ((*it)->getMalus() > 0)
 				color /= 2;
-			this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color);		// Draw snakes
+			this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color, CELL_SNAKE);		// Draw snakes
 		}
 	}
 	return ;
@@ -162,21 +162,36 @@ void					Engine::drawPlayers(void)
 void					Engine::drawFoods(void)
 {
 	for (auto it = this->_listFoods.begin(); it != this->_listFoods.end(); ++it)
-		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xff00ff);		// Draw foods
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xff00ff, CELL_FOOD);		// Draw foods
 	return ;
 }
 
 void					Engine::drawRocks(void)
 {
 	for (auto it = this->_listRocks.begin(); it != this->_listRocks.end(); ++it)
-		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0x770033);		// Draw rocks
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0x770033, CELL_ROCK);		// Draw rocks
 	return ;
 }
 
 void					Engine::drawMalus(void)
 {
 	for (auto it = this->_listMalus.begin(); it != this->_listMalus.end(); ++it)
-		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xaa00a5);		// Draw malus
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0xaa00a5, CELL_MALUS);		// Draw malus
+	return ;
+}
+
+void					Engine::drawDefault(void)
+{
+	for (auto it = this->_map.getEmptyCells().begin(); it != this->_map.getEmptyCells().end(); ++it)
+		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0, CELL_DEFAULT);		// Draw default
+	return ;
+}
+
+void					Engine::drawText(void)
+{
+	this->_glib->write("", 0xffffff);
+	if (this->_pause)
+		this->_glib->write("PAUSE", 0xffffff);
 	return ;
 }
 
@@ -198,23 +213,17 @@ void					Engine::getInputs(void)
 			delete this->_glib;
 			exit (0);
 		}
+		if (std::get<0>(*it) == F4)
+			this->_glib->setTexture();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
-		if (duration > this->_speed * 1000000)
+		if (duration > this->_speed * 1000000
+			&& std::get<0>(*it) == Pause)
 		{
-			if (std::get<0>(*it) == Pause)
-			{
-				oldtime = Clock::now();
-				this->_pause = !this->_pause;
-			}
+			oldtime = Clock::now();
+			this->_pause = !this->_pause;
 		}
 		if (std::get<0>(*it) >= F1 && std::get<0>(*it) <= F3)
 			this->load_lib(std::get<0>(*it));
-		if (this->_pause) {
-			this->_glib->write("PAUSE", 0xffffff);
-			return ;
-		} else {
-			this->_glib->write("", 0xffffff);
-		}
 		if (std::get<0>(*it) >= Left && std::get<0>(*it) <= Bottom)
 		{
 			Snake * p = this->get_player_by_id(std::get<1>(*it));
@@ -315,7 +324,9 @@ void					Engine::run(void)
 		this->drawPlayers();
 		this->drawFoods();
 		this->drawRocks();
+		this->drawDefault();
 		this->drawMalus();
+		this->drawText();
 		this->_glib->display();
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
