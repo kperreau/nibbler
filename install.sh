@@ -30,9 +30,30 @@ else
 	./configure --prefix=$C_PATH/glib/sdl
 	make
 	make install-lib
+	make install-hdrs
 	echo "\r\033[32;1m[SDL: install Complete]"
 	cd $C_PATH
 	echo "\033[32;1m[SDL: Done]\033[0m"
+fi
+
+if [ -e "$C_PATH/glib/sdl_ttf" ]
+then
+	echo "\033[32;1mSDL_TTF : [Already Done !]\033[0m"
+else
+	echo "\033[33;1m[SDL_TTF: Downloading]"
+	curl -o SDL_TTF.tar.gz https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.14.tar.gz
+	tar -zxvf SDL_TTF.tar.gz
+	rm SDL_TTF.tar.gz
+	mv SDL2_ttf-2.0.14 glib/sdl_ttf
+	cd glib/sdl_ttf
+	echo "\033[33m[SDL_TTF: install]\c\n"
+	export SDL2_CONFIG=$C_PATH/glib/sdl/sdl2-config
+	./configure --with-sdl-prefix=$C_PATH/glib/sdl --exec-prefix=$C_PATH/glib/sdl_ttf --prefix=$C_PATH/glib/sdl_ttf
+	make
+	make install
+	echo "\r\033[32;1m[SDL_TTF: install Complete]"
+	cd $C_PATH
+	echo "\033[32;1m[SDL_TTF: Done]\033[0m"
 fi
 
 if [ -e "$C_PATH/glib/glfw" ]
