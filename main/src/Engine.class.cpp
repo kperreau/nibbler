@@ -233,7 +233,8 @@ void					Engine::getInputs(void)
 		if (std::get<0>(*it) >= Left && std::get<0>(*it) <= Bottom)
 		{
 			Snake * p = this->get_player_by_id(std::get<1>(*it));
-			p->setNextDir(std::get<0>(*it));
+			if (p != NULL)
+				p->setNextDir(std::get<0>(*it));
 		}
 	}
 	return ;
