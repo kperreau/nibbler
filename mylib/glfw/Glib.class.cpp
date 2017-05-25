@@ -192,21 +192,23 @@ void			Glib::draw(int x, int y, int color, cell c)
 
 	x *= this->_square;
 	y *= this->_square;
-	int tx = x - 1;
-    int ty = y - 1;
+	int tx = x;
+    int ty = y;
+	++x;
+	++y;
 	glColor3ub(0xff, 0xff, 0xff);
 	glBegin(GL_QUADS);
 		glVertex2f((GLfloat)tx, (GLfloat)ty);
-		glVertex2f((GLfloat)tx + this->_square + 2, (GLfloat)ty);
-		glVertex2f((GLfloat)tx + this->_square + 2, (GLfloat)ty + this->_square + 2);
-		glVertex2f((GLfloat)tx, (GLfloat)ty + this->_square + 2);
+		glVertex2f((GLfloat)tx + this->_square, (GLfloat)ty);
+		glVertex2f((GLfloat)tx + this->_square, (GLfloat)ty + this->_square);
+		glVertex2f((GLfloat)tx, (GLfloat)ty + this->_square);
 	glEnd();
 	glColor3ub(this->getColor(color, 0), this->getColor(color, 1), this->getColor(color, 2));
 	glBegin(GL_QUADS);
 		glVertex2f((GLfloat)x, (GLfloat)y);
-		glVertex2f((GLfloat)x + this->_square, (GLfloat)y);
-		glVertex2f((GLfloat)x + this->_square, (GLfloat)y + this->_square);
-		glVertex2f((GLfloat)x, (GLfloat)y + this->_square);
+		glVertex2f((GLfloat)x + this->_square - 2, (GLfloat)y);
+		glVertex2f((GLfloat)x + this->_square - 2, (GLfloat)y + this->_square - 2);
+		glVertex2f((GLfloat)x, (GLfloat)y + this->_square - 2);
 	glEnd();
 	return ;
 }
