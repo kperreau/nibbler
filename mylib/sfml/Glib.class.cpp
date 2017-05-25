@@ -149,6 +149,8 @@ void			Glib::draw(int x, int y, int color, cell c)
 			if (c == CELL_SNAKE
 				|| c == CELL_HEAD)
 			{
+				if (c == CELL_HEAD)
+					color *= 2;
 				rectangle.setColor(
 					sf::Color(
 						  this->getColor(color, 0)

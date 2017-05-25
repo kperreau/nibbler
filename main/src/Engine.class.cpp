@@ -149,8 +149,8 @@ void					Engine::drawPlayers(void)
 		for (auto it2 = elem.begin(); it2 != elem.end(); ++it2)
 		{
 			color = (*it)->getColor();
-			if (it2 == elem.begin())
-				color /= 2;
+			//if (it2 == elem.begin())
+			//	color /= 2;
 			if ((*it)->getMalus() > 0)
 				color /= 2;
 			if (it2 == elem.begin())
