@@ -153,7 +153,13 @@ void					Engine::drawPlayers(void)
 				color /= 2;
 			if ((*it)->getMalus() > 0)
 				color /= 2;
-			this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color, CELL_SNAKE);		// Draw snakes
+			if (it2 == elem.begin())
+			{
+				color /= 2;
+				this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color, CELL_HEAD);		// Draw snakes
+			}
+			else
+				this->_glib->draw(std::get<0>(*it2), std::get<1>(*it2), color, CELL_SNAKE);		// Draw snakes
 		}
 	}
 	return ;

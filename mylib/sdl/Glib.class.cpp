@@ -110,16 +110,16 @@ void			Glib::draw(int x, int y, int color, cell c)
 	if (c == CELL_DEFAULT)
 		return ;
 
+    r.x = x * this->_square + 1;
+    r.y = y * this->_square + 1;
+    r.w = this->_square - 2;
+    r.h = this->_square - 2;
+    SDL_SetRenderDrawColor( this->_renderer, this->getColor(color, 0), this->getColor(color, 1), this->getColor(color, 2), 0 );
+	SDL_RenderFillRect( this->_renderer, &r );
     r.x = x * this->_square;
     r.y = y * this->_square;
     r.w = this->_square;
     r.h = this->_square;
-    SDL_SetRenderDrawColor( this->_renderer, this->getColor(color, 0), this->getColor(color, 1), this->getColor(color, 2), 0 );
-	SDL_RenderFillRect( this->_renderer, &r );
-    r.x = x * this->_square-1;
-    r.y = y * this->_square-1;
-    r.w = this->_square+2;
-    r.h = this->_square+2;
     SDL_SetRenderDrawColor(this->_renderer, 0xff, 0xff, 0xff, 0);
     SDL_RenderDrawRect( this->_renderer, &r );
 	return ;

@@ -45,6 +45,8 @@ Glib::Glib() : _texture(false)
 	this->_textures[CELL_DEFAULT] = texture;
 	texture.loadFromFile("./data/snake.png");
 	this->_textures[CELL_SNAKE] = texture;
+	texture.loadFromFile("./data/head.png");
+	this->_textures[CELL_HEAD] = texture;
 	return ;
 }
 
@@ -122,7 +124,7 @@ void			Glib::draw(int x, int y, int color, cell c)
 		{
 			if (c == CELL_DEFAULT)
 				return ;
-			sf::RectangleShape rectangle(sf::Vector2f(this->_square, this->_square));
+			sf::RectangleShape rectangle(sf::Vector2f(this->_square -2 , this->_square - 2));
 			rectangle.setFillColor(
 				sf::Color(
 					  this->getColor(color, 0)
@@ -138,13 +140,14 @@ void			Glib::draw(int x, int y, int color, cell c)
 					, 0xff
 					)
 				);
-			rectangle.setPosition(x * this->_square, y * this->_square);
+			rectangle.setPosition(x * this->_square + 1, y * this->_square + 1);
 			this->_window.draw(rectangle);
 		}
 		else
 		{
 			sf::Sprite	rectangle;
-			if (c == CELL_SNAKE)
+			if (c == CELL_SNAKE
+				|| c == CELL_HEAD)
 			{
 				rectangle.setColor(
 					sf::Color(
