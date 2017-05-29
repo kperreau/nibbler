@@ -12,6 +12,8 @@
 
 #ifndef NIBBLER_CLASS_HPP
 # define NIBBLER_CLASS_HPP
+# include <exception>
+# include <stdexcept>
 
 enum	cell {
 	CELL_DEFAULT,

@@ -58,7 +58,13 @@ Engine::Engine(int width, int height, int nb_players, uint32_t difficulty)
 	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/malus.wav", S_MALUS));
 	this->_sounds.push_back(std::pair <std::string, e_sound>("./data/end.wav", S_END));
 
-	this->load_lib(this->_lib);
+	try {
+		this->load_lib(this->_lib);
+	}
+	catch (std::exception const & e){
+		std::cerr << "ERREUR : " << e.what() << std::endl;
+		exit (-1);
+	}
 	this->genFoods();
 	this->run();		// run the game
 	return ;
@@ -77,6 +83,9 @@ Engine::~Engine(void)
 	return ;
 }
 
+// ---------
+// Fonctions qui generes les foods + malus + obstacles sur la map
+// ----------
 void					Engine::genFoods(void)
 {
 	std::srand(time(NULL));
@@ -138,7 +147,14 @@ void					Engine::genMalus(void)
 	this->_map.getEmptyCells().erase(it);
 	return ;
 }
+// ---------
+// Fin des fonctions qui genere
+// ---------
 
+
+// ---------
+// Fonctions qui dessine dans le buffer des libs graphiques
+// ----------
 void					Engine::drawPlayers(void)
 {
 	int  color = 0;
@@ -149,8 +165,7 @@ void					Engine::drawPlayers(void)
 		for (auto it2 = elem.begin(); it2 != elem.end(); ++it2)
 		{
 			color = (*it)->getColor();
-			//if (it2 == elem.begin())
-			//	color /= 2;
+
 			if ((*it)->getMalus() > 0)
 				color /= 2;
 			if (it2 == elem.begin())
@@ -192,7 +207,12 @@ void					Engine::drawDefault(void)
 		this->_glib->draw(std::get<0>(*it), std::get<1>(*it), 0, CELL_DEFAULT);		// Draw default
 	return ;
 }
+// ---------
+// Fin des fonctions qui dessine
+// ---------
 
+
+// Affiche du texte
 void					Engine::drawText(void)
 {
 	this->_glib->write("", 0xffffff);
@@ -201,45 +221,67 @@ void					Engine::drawText(void)
 	return ;
 }
 
+
+// Gestion des touches calviers
 void					Engine::getInputs(void)
 {
 	auto				time = Clock::now();
 	static auto			oldtime = Clock::now();
 	long				duration = 0;
 	std::list <std::pair <input, int> >	keys;
+	Snake * p = NULL;
 
 
 	keys = this->_glib->getInput(0);
-
+	duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
 	for (auto it = keys.begin(); it != keys.end(); ++it)
 	{
-		if (std::get<0>(*it) == Exit)
+		switch (std::get<0>(*it))
 		{
-			delete this->_alib;
-			delete this->_glib;
-			exit (0);
-		}
-		if (std::get<0>(*it) == F4)
-			this->_glib->setTexture();
-		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
-		if (duration > this->_speed * 1000000
-			&& std::get<0>(*it) == Pause)
-		{
-			oldtime = Clock::now();
-			this->_pause = !this->_pause;
-		}
-		if (std::get<0>(*it) >= F1 && std::get<0>(*it) <= F3)
-			this->load_lib(std::get<0>(*it));
-		if (std::get<0>(*it) >= Left && std::get<0>(*it) <= Bottom)
-		{
-			Snake * p = this->get_player_by_id(std::get<1>(*it));
-			if (p != NULL)
-				p->setNextDir(std::get<0>(*it));
+			case Exit:
+				delete this->_alib;
+				delete this->_glib;
+				exit (0);
+			case F4:
+				this->_glib->setTexture();
+				break ;
+			case F1:
+			case F2:
+			case F3:
+				try {
+					this->load_lib(std::get<0>(*it));
+				}
+				catch (std::exception const & e){
+					std::cerr << "ERREUR : " << e.what() << std::endl;
+					delete this->_alib;
+					exit (-1);
+				}
+				break ;
+			case Left:
+			case Right:
+			case Top:
+			case Bottom:
+				if (this->_pause)
+					continue ;
+				p = this->get_player_by_id(std::get<1>(*it));
+				if (p != NULL)
+					p->setNextDir(std::get<0>(*it));
+				break ;
+			case Pause:
+				if (duration > this->_speed * 1000000)
+				{
+					oldtime = Clock::now();
+					this->_pause = !this->_pause;
+				}
+				break ;
+			default:
+				break ;
 		}
 	}
 	return ;
 }
 
+// Load des libs dynamiques graphiques avec F1 F2 F3
 int						Engine::load_lib(input lib)
 {
 	IGlib *			(*func_lib)();
@@ -270,23 +312,30 @@ int						Engine::load_lib(input lib)
 	}
 	if (!handle)
 	{
-		fputs (dlerror(), stderr);
-		exit(1);
+		throw std::runtime_error(dlerror());
+		return (-1);
 	}
 	*(void**)&(func_lib) = dlsym(handle, "getGlib");
 	if ((error = dlerror()) != NULL)
 	{
-		fputs(error, stderr);
-		exit(1);
+		throw std::runtime_error(error);
+		return (-1);
 	}
 
 	this->_glib = func_lib();
-	this->_glib->init(this->_width, this->_height, SQUARE);		// create window
+	try {
+		this->_glib->init(this->_width, this->_height, SQUARE);		// create window
+	}
+	catch (std::exception const & e) {
+		std::cerr << "ERREUR : " << e.what() << std::endl;
+		delete this->_glib;
+		exit (-1);
+	}
 	this->_glib->clear();
 	return (0);
 }
 
-
+// fonction de fin du jeu
 void					Engine::end(void)
 {
 	std::cout << "Game over" << std::endl;
@@ -299,11 +348,9 @@ void					Engine::end(void)
 	return ;
 }
 
-void					Engine::run(void)
+// Fonction de l'init / load de la lib audio
+void					Engine::get_lib_audio(void)
 {
-	auto	time = Clock::now();
-	auto	oldtime = Clock::now();
-	long	duration = 0;
 	IAlib*	(*func_alib)();
 	char*	error;
 	void*	handle;
@@ -312,47 +359,92 @@ void					Engine::run(void)
 	handle = dlopen("../mylib/audio/libaudio.dylib", RTLD_NOW|RTLD_GLOBAL);
 	if (!handle)
 	{
-		fputs (dlerror(), stderr);
-		exit(1);
+		throw std::runtime_error(dlerror());
+		return ;
 	}
 	*(void**)&(func_alib) = dlsym(handle, "getAlib");
 	if ((error = dlerror()) != NULL)
 	{
-		fputs(error, stderr);
-		exit(1);
+		throw std::runtime_error(error);
+		return ;
+	}
+	this->_alib = func_alib();
+
+	try {
+		this->_alib->init(this->_sounds);		// init audio
+	}
+	catch (std::exception const & e){
+		std::cerr << "ERREUR : " << e.what() << std::endl;
+		delete this->_alib;
+		exit (-1);
+	}
+	this->_alib->play(S_MUSIC);				// play music
+	return ;
+}
+
+
+// On affiche tous a l'ecran
+void					Engine::display(void)
+{
+	this->drawPlayers();
+	this->drawFoods();
+	this->drawRocks();
+	this->drawDefault();
+	this->drawMalus();
+	this->drawText();
+	this->_glib->display();
+	return ;
+}
+
+void					Engine::run(void)
+{
+	auto	time = Clock::now();
+	auto	oldtime = Clock::now();
+	long	duration = 0;
+
+	// Initialisation de la lib audio
+	try {
+		this->get_lib_audio();
+	}
+	catch (std::exception const & e){
+		std::cerr << "ERREUR : " << e.what() << std::endl;
+		exit (-1);
 	}
 
-	this->_alib = func_alib();
-	this->_alib->init(this->_sounds);		// init audio
-	this->_alib->play(S_MUSIC);
 	while (1)
 	{
+		// On recupere les inputs claviers
 		this->getInputs();
-		this->drawPlayers();
-		this->drawFoods();
-		this->drawRocks();
-		this->drawDefault();
-		this->drawMalus();
-		this->drawText();
-		this->_glib->display();
+
+		// On affiche a l'ecran
+		this->display();
+
+		// La boucle principale
 		time = Clock::now();
 		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
 		if (duration < this->_speed * 1000000 || this->_pause)
 			continue ;
 		oldtime = Clock::now();
+
+		// collision + food + malus + etc..
 		this->checkPlayers();
+
+		// Generation des food et rocks sur la map
 		this->genFoods();
 		this->genRocks();
+
+		// Fin du jeu, on quitte
 		if (this->_nbPlayersAlive < 1)
 		{
 			this->end();
 			break ;
 		}
 	}
-	dlclose(handle);
+	//dlclose(handle);
 	return ;
 }
 
+// Gestions de toutes les colisions et conséquences (Core du jeu)
 void					Engine::checkPlayers(void)
 {
 	int						collision = 0;
@@ -411,6 +503,7 @@ void					Engine::checkPlayers(void)
 	return ;
 }
 
+// Check le type d'une cellule et s'il y a collision
 cell					Engine::checkCollision(int x, int y)
 {
 	cell					c_cell;
@@ -446,6 +539,10 @@ cell					Engine::checkCollision(int x, int y)
 	}
 	return (CELL_DEFAULT);
 }
+
+// -------
+// Les Geteurs et Seteurs
+// -------
 
 long					Engine::getRate(void) const
 {

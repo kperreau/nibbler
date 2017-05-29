@@ -41,12 +41,22 @@ void				Alib::init(std::list <std::pair <std::string, e_sound> > sounds)
 		if (std::get<1>(*it) == S_MUSIC)
 		{
 			if (!this->_music.openFromFile(std::get<0>(*it)))
+			{
+				std::stringstream	ss;
+				ss << "Unable to load audio file: " << std::get<0>(*it);
+				throw std::runtime_error(ss.str());
 				return ;
+			}
 		}
 		else
 		{
 			if (!buff.loadFromFile(std::get<0>(*it)))
+			{
+				std::stringstream	ss;
+				ss << "Unable to load audio file: " << std::get<0>(*it);
+				throw std::runtime_error(ss.str());
 				return ;
+			}
 			this->_sounds[(*it).second] = std::pair <sf::SoundBuffer, sf::Sound>(buff, sound);
 			this->_sounds[(*it).second].second.setBuffer(this->_sounds[(*it).second].first);
 		}

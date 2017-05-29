@@ -50,6 +50,7 @@ class Engine
 		void					checkPlayers(void);
 		void					setRate(void);
 		long					getRate(void) const;
+		void					get_lib_audio(void);
 		cell					checkCollision(int x, int y);
 		void					drawPlayers(void);
 		void					drawFoods(void);
@@ -62,6 +63,7 @@ class Engine
 		void					genRocks(void);
 		void					genMalus(void);
 		void					getInputs(void);
+		void					display(void);
 		void					end(void);
 		int						load_lib(input lib);
 		Engine &				operator=(Engine const & rhs);

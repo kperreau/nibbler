@@ -35,17 +35,41 @@ Glib::Glib() : _texture(false)
 
 	// textures
 	texture.setSmooth(true);
-	texture.loadFromFile("./data/malus.png");
+	if (!texture.loadFromFile("./data/malus.png"))
+	{
+		throw std::runtime_error("Failed to load texture ./data/malus.png");
+		return ;
+	}
 	this->_textures[CELL_MALUS] = texture;
-	texture.loadFromFile("./data/burger.png");
+	if (!texture.loadFromFile("./data/burger.png"))
+	{
+		throw std::runtime_error("Failed to load texture ./data/burger.png");
+		return ;
+	}
 	this->_textures[CELL_FOOD] = texture;
-	texture.loadFromFile("./data/rock.png");
+	if (!texture.loadFromFile("./data/rock.png"))
+	{
+		throw std::runtime_error("Failed to load texture ./data/rock.png");
+		return ;
+	}
 	this->_textures[CELL_ROCK] = texture;
-	texture.loadFromFile("./data/grass.png");
+	if (!texture.loadFromFile("./data/grass.png"))
+	{
+		throw std::runtime_error("Unable to load texture ./data/grass.png");
+		return ;
+	}
 	this->_textures[CELL_DEFAULT] = texture;
-	texture.loadFromFile("./data/snake.png");
+	if (!texture.loadFromFile("./data/snake.png"))
+	{
+		throw std::runtime_error("Failed to load texture ./data/snake.png");
+		return ;
+	}
 	this->_textures[CELL_SNAKE] = texture;
-	texture.loadFromFile("./data/head.png");
+	if (!texture.loadFromFile("./data/head.png"))
+	{
+		throw std::runtime_error("Failed to load texture ./data/head.png");
+		return ;
+	}
 	this->_textures[CELL_HEAD] = texture;
 	return ;
 }
@@ -63,13 +87,25 @@ Glib::Glib(Glib const & src)
 
 void				Glib::init(int width, int height, int square)
 {
+
+	if (width >= sf::VideoMode::getDesktopMode().width
+		|| height >= sf::VideoMode::getDesktopMode().height)
+	{
+		throw std::length_error("Window size too big");
+		return ;
+	}
+
 	this->_width = width;
 	this->_height = height;
 	this->_square = square;
 	this->_window.create(sf::VideoMode(width, height), "Nibbler SFML");
 	this->_window.setPosition(sf::Vector2i((sf::VideoMode::getDesktopMode().width/2)-(width/2), (sf::VideoMode::getDesktopMode().height/2)-(height/2)));
 
-	this->_font.loadFromFile("data/arial.ttf");
+	if (!this->_font.loadFromFile("data/arial.ttf"))
+	{
+		throw std::runtime_error("Failed to load font ./data/arial.ttf");
+		return ;
+	}
 	this->_text.setFont(this->_font); // font est un sf::Font
 	this->_text.setCharacterSize(24); // exprimée en pixels, pas en points !
 	this->_text.setString("");
