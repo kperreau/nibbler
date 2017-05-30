@@ -130,7 +130,7 @@ void			Glib::write(std::string str, int color)
 
 }
 
-std::list <std::pair <input, int> >		Glib::getInput(int id)
+std::list <std::pair <input, int> >		Glib::getInput(void)
 {
 	SDL_Event								event;
 	std::list <std::pair <input, int> >		keys;

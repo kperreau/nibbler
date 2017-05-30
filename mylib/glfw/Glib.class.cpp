@@ -218,7 +218,7 @@ void			Glib::write(std::string str, int color)
 
 }
 
-std::list <std::pair <input, int> >		Glib::getInput(int id)
+std::list <std::pair <input, int> >		Glib::getInput(void)
 {
 	std::list <std::pair <input, int> >		keys;
 	std::list <int> &						pollKeys = glfw_singleton();

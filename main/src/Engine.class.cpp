@@ -232,7 +232,7 @@ void					Engine::getInputs(void)
 	Snake * p = NULL;
 
 
-	keys = this->_glib->getInput(0);
+	keys = this->_glib->getInput();
 	duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time - oldtime).count();
 	for (auto it = keys.begin(); it != keys.end(); ++it)
 	{

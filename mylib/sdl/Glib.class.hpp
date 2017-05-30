@@ -36,7 +36,7 @@ class Glib : public IGlib
 		void					setTexture(void);
 		void					draw(int x, int y, int color, cell c);
 		void					write(std::string str, int color);
-		std::list <std::pair <input, int> >		getInput(int id);
+		std::list <std::pair <input, int> >		getInput(void);
 		int						getColor(int color, int type);
 		void					drawSqure(int x, int y);
 

@@ -35,8 +35,8 @@ HEADERS = $(patsubst %, $(INCLUDESDIR)/%, $(HFILES))
 
 # COMPILATION
 
-# ERRORFLAGS = -Wall -Werror -Wextra -march=native -Ofast
-ERRORFLAGS = --std=c++11 -march=native -O2
+ERRORFLAGS = -Wall -Werror -Wextra -march=native -Ofast --std=c++11
+#ERRORFLAGS = --std=c++11 -march=native -O2
 
 INCLUDEFLAGS = -I $(INCLUDESDIR)/
 

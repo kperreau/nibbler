@@ -13,8 +13,8 @@
 #include "Snake.class.hpp"
 
 Snake::Snake(std::pair <int, int> start, int const color, Map & map)
-: map(map), _len(4), _isAlive(1), _dir(Top)
-, _nextDir(None), _id(_nextID++), _color(color), _malus(0)
+: map(map), _id(_nextID++), _len(4), _isAlive(1), _dir(Top)
+, _nextDir(None), _malus(0), _color(color)
 {
 	this->_elems.push_back(this->addElem(std::get<0>(start), std::get<1>(start)));
 	++std::get<1>(start);

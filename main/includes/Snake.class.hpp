@@ -48,13 +48,13 @@ class Snake
 		Map &				map;
 
 	private:
+		const int			_id;
 		uint32_t			_len;
 		char				_isAlive;
 		input				_dir;
-		int					_malus;
 		std::list <input>	_nextDir;
-		const int			_id;
-		uint32_t			_speed;
+		int					_malus;
+		//uint32_t			_speed;
 		int					_color;
 		static int			_nextID;
 		std::pair <int, int>_last;

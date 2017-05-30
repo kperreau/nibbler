@@ -81,6 +81,7 @@ Glib::~Glib(void)
 
 Glib::Glib(Glib const & src)
 {
+	static_cast<void>(src);
 	//*this = src;
 	return ;
 }
@@ -88,8 +89,8 @@ Glib::Glib(Glib const & src)
 void				Glib::init(int width, int height, int square)
 {
 
-	if (width >= sf::VideoMode::getDesktopMode().width
-		|| height >= sf::VideoMode::getDesktopMode().height)
+	if (static_cast<unsigned int>(width) >= sf::VideoMode::getDesktopMode().width
+		|| static_cast<unsigned int>(height) >= sf::VideoMode::getDesktopMode().height)
 	{
 		throw std::length_error("Window size too big");
 		return ;
@@ -225,7 +226,7 @@ void			Glib::write(std::string str, int color)
 	this->_text.setPosition(sf::Vector2f(this->_width/2.0f, this->_height/2.0f));
 }
 
-std::list <std::pair <input, int> >			Glib::getInput(int id)
+std::list <std::pair <input, int> >			Glib::getInput(void)
 {
 	std::list <std::pair <input, int> >	keys;
 	sf::Event			event;
