@@ -15,7 +15,7 @@
 Engine::Engine(int width, int height, int nb_players, uint32_t difficulty)
 : _speed(150), _score(0), _difficulty(difficulty), _rate(0), _pause(false), _lib(F1)
 {
-	if (nb_players < 1 && nb_players > 4)
+	if (nb_players < 1 && nb_players > 3)
 	{
 		std::cerr << "Bad players number" << std::endl;
 		return ;

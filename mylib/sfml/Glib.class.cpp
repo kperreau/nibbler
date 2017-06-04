@@ -22,10 +22,14 @@ Glib::Glib() : _texture(false)
 	this->_input[sf::Keyboard::Down] = std::pair<input, int>(Bottom, 0);
 	this->_input[sf::Keyboard::Left] = std::pair<input, int>(Left, 0);
 	this->_input[sf::Keyboard::Right] = std::pair<input, int>(Right, 0);
-	this->_input[sf::Keyboard::Z] = std::pair<input, int>(Top, 1);
+	this->_input[sf::Keyboard::W] = std::pair<input, int>(Top, 1);
 	this->_input[sf::Keyboard::S] = std::pair<input, int>(Bottom, 1);
-	this->_input[sf::Keyboard::Q] = std::pair<input, int>(Left, 1);
+	this->_input[sf::Keyboard::A] = std::pair<input, int>(Left, 1);
 	this->_input[sf::Keyboard::D] = std::pair<input, int>(Right, 1);
+	this->_input[sf::Keyboard::U] = std::pair<input, int>(Top, 2);
+	this->_input[sf::Keyboard::J] = std::pair<input, int>(Bottom, 2);
+	this->_input[sf::Keyboard::H] = std::pair<input, int>(Left, 2);
+	this->_input[sf::Keyboard::K] = std::pair<input, int>(Right, 2);
 	this->_input[sf::Keyboard::Escape] = std::pair<input, int>(Exit, 4);
 	this->_input[sf::Keyboard::Space] = std::pair<input, int>(Pause, 4);
 	this->_input[sf::Keyboard::F1] = std::pair<input, int>(F1, 4);

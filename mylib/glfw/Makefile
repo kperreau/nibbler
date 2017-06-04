@@ -25,7 +25,7 @@ INCLUDEDIR = .
 HEADERS = Glib.class.hpp ../../main/includes/IGlib.class.hpp
 
 # COMPILATION
-ERRORFLAGS = # -Wall -Werror -Wextra
+ERRORFLAGS = -Wall -Werror -Wextra
 
 INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/glfw/include/
 

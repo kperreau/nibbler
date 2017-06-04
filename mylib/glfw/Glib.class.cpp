@@ -19,10 +19,14 @@ Glib::Glib() : _texture(false)
 	this->_input[GLFW_KEY_DOWN] = std::pair<input, int>(Bottom, 0);
 	this->_input[GLFW_KEY_LEFT] = std::pair<input, int>(Left, 0);
 	this->_input[GLFW_KEY_RIGHT] = std::pair<input, int>(Right, 0);
-	this->_input[GLFW_KEY_Z] = std::pair<input, int>(Top, 1);
+	this->_input[GLFW_KEY_W] = std::pair<input, int>(Top, 1);
 	this->_input[GLFW_KEY_S] = std::pair<input, int>(Bottom, 1);
-	this->_input[GLFW_KEY_Q] = std::pair<input, int>(Left, 1);
+	this->_input[GLFW_KEY_A] = std::pair<input, int>(Left, 1);
 	this->_input[GLFW_KEY_D] = std::pair<input, int>(Right, 1);
+	this->_input[GLFW_KEY_U] = std::pair<input, int>(Top, 2);
+	this->_input[GLFW_KEY_J] = std::pair<input, int>(Bottom, 2);
+	this->_input[GLFW_KEY_H] = std::pair<input, int>(Left, 2);
+	this->_input[GLFW_KEY_K] = std::pair<input, int>(Right, 2);
 	this->_input[GLFW_KEY_ESCAPE] = std::pair<input, int>(Exit, 4);
 	this->_input[GLFW_KEY_SPACE] = std::pair<input, int>(Pause, 4);
 	this->_input[GLFW_KEY_F1] = std::pair<input, int>(F1, 4);
@@ -38,7 +42,7 @@ Glib::~Glib(void)
 
 Glib::Glib(Glib const & src)
 {
-	//*this = src;
+	*this = src;
 	return ;
 }
 
@@ -51,7 +55,10 @@ static std::list <int> &		glfw_singleton()
 void		keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	std::list <int> &		keys = glfw_singleton();
-
+	//CallBack unused
+	(void)window;
+	(void)scancode;
+	(void)mods;
 	if (action == GLFW_PRESS)
 		keys.push_back(key);
 	return ;
@@ -63,14 +70,26 @@ void			Glib::init(int width, int height, int square)
 	this->_height = height;
 	this->_square = square;
 	
-	if (!glfwInit())
+	if (!glfwInit()) {
+		throw std::runtime_error("Failed to init GLFW");
         return ;
+    }
+
+    GLFWmonitor* primary = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(primary);
+	if (static_cast<unsigned int>(width) >= static_cast<unsigned int>(mode->width)
+		|| static_cast<unsigned int>(height) >= static_cast<unsigned int>(mode->height))
+	{
+		throw std::length_error("Window size too big");
+		return ;
+	}
 
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     this->_window = glfwCreateWindow(width, height, "Nibbler GLFW", NULL, NULL);
     if (!this->_window)
     {
         glfwTerminate();
+        throw std::runtime_error("Failed to create GLFW Window");
         return ;
     }
 
@@ -215,14 +234,14 @@ void			Glib::draw(int x, int y, int color, cell c)
 
 void			Glib::write(std::string str, int color)
 {
-
+	(void)color;
+	(void)str;
 }
 
 std::list <std::pair <input, int> >		Glib::getInput(void)
 {
 	std::list <std::pair <input, int> >		keys;
 	std::list <int> &						pollKeys = glfw_singleton();
-	int		state;
 
 	if (glfwWindowShouldClose(this->_window))
 	{

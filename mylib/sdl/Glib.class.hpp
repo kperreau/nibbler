@@ -20,6 +20,7 @@
 # include <list>
 # include <../../main/includes/IGlib.class.hpp>
 # include <SDL.h>
+# include <SDL_ttf.h>
 
 class Glib : public IGlib
 {
@@ -49,6 +50,8 @@ class Glib : public IGlib
 		SDL_Renderer*				_renderer;
 		std::map<int, std::pair<input, int> >		_input;
 		bool						_texture;
+		TTF_Font					*_police;
+		SDL_Surface					*_texte;
 };
 
 //std::ostream &		operator<<(std::ostream & o, Glib const & i);

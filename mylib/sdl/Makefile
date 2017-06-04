@@ -25,11 +25,11 @@ INCLUDEDIR = .
 HEADERS = Glib.class.hpp ../../main/includes/IGlib.class.hpp
 
 # COMPILATION
-ERRORFLAGS = # -Wall -Werror -Wextra
+ERRORFLAGS = -Wall -Werror -Wextra
 
-INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/sdl/include/
+INCLUDEFLAGS = -I $(INCLUDEDIR) -I ../../glib/sdl/include/ -I ../../glib/sdl_ttf
 
-LIBFLAGS = -L../../glib/sdl/lib/ -lSDL2
+LIBFLAGS = -L../../glib/sdl/lib/ -L../../glib/sdl_ttf/lib/ -lSDL2 -lSDL2_ttf
 
 FLAGS = $(ERRORFLAGS) $(INCLUDEFLAGS) -std=c++11 -O2
 
